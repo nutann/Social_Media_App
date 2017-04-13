@@ -11,13 +11,16 @@
         $stateProvider
             .state('home',{
                 url : '/home',
-                templateUrl:'home.html'
+                templateUrl:'home.html',
+                controller : 'homeCtrl'
             })
             .state('signin',{
                 //TODO add html and controller
             })
             .state('signup',{
-                //TODO add sign up page
+                url : '/signup',
+                templateUrl:'signup.html',
+                controller :'signupCtrl'
             })
             .state('main',{
                 //TODO add main page
