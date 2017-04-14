@@ -6,6 +6,7 @@
     var app = angular.module('SocialMedia');
 
     app.controller('signupCtrl',function ($scope,$state,$http) {
+        $scope.showerror = false;
 
         $scope.submit = function (event) {
             event.preventDefault();
@@ -17,12 +18,15 @@
             }
             console.log("submit called");
             var successCallback = function (response) {
+
                 console.log("response success" +response.data);
-                $state.go("home");
+
+
             }
             var errorCallback = function (err) {
-                console.log("response error" +err);
-                //TODO show error state ,handling sub states and multiple views
+                $scope.showerror = true;
+
+                console.log("response success" +err);
 
             }
 
