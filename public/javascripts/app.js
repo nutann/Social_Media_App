@@ -14,8 +14,10 @@
                 templateUrl:'home.html',
                 controller : 'homeCtrl'
             })
-            .state('signin',{
-                //TODO add html and controller
+            .state('login',{
+                url : '/login',
+                templateUrl:'login.html',
+                controller :'loginCtrl'
             })
             .state('signup',{
                 url : '/signup',
