@@ -14,6 +14,10 @@
             //TODO make a ajax query to send data to the server
             $state.go("home");
         }
+
+        $scope.goBack = function() {
+            window.history.back();
+        }
     })
 
 
