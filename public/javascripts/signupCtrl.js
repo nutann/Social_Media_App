@@ -7,26 +7,35 @@
 
     app.controller('signupCtrl',function ($scope,$state,$http) {
         $scope.showerror = false;
+        $scope.existserror = false;
 
         $scope.submit = function (event) {
             event.preventDefault();
             var data = {
-                "firstName" : $scope.firstName,
-                "lastName"  : $scope.lastName,
-                "email"     : $scope.email,
-                "password"  :$scope.cpassword
+                userInfo : {
+                    "firstName" : $scope.firstName,
+                    "lastName"  : $scope.lastName,
+                    "email"     : $scope.email,
+                    "password"  :$scope.cpassword
+                }
             }
             console.log("submit called");
             var successCallback = function (response) {
-
+                $state.go("home")
                 console.log("response success" +response.data);
 
 
             }
             var errorCallback = function (err) {
-                $scope.showerror = true;
+                if(err.data === "username already exists")
+                {
+                    $scope.existserror = true;
+                }
+                else {
+                    $scope.showerror = true;
+                }
 
-                console.log("response success" +err);
+                console.log("response error" +JSON.stringify(err));
 
             }
 

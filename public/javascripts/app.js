@@ -24,10 +24,6 @@
                 templateUrl:'signup.html',
                 controller :'signupCtrl'
             })
-            .state('signup.error',{
-                url : '/error',
-                templateUrl:'error.html',
-            })
             .state('main',{
                 //TODO add main page
             });
