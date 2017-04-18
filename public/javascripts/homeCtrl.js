@@ -11,7 +11,7 @@
         $scope.signup = function (event) {
 
             event.preventDefault();
-            $state.go('signin');
+            //$state.go('signin');
             
         }
     });
