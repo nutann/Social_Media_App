@@ -7,6 +7,7 @@
     var app = angular.module('SocialMedia');
 
     app.controller('loginCtrl',function ($scope,$state,$http) {
+        $scope.showerror = false;
 
         $scope.goBack = function() {
             window.history.back();
@@ -22,6 +23,7 @@
             }
             console.log("Login called");
             var successCallback = function (response) {
+                $scope.showerror = false;
                 $state.go("home")
                 console.log("Login success" +response.data);
 
@@ -30,11 +32,9 @@
             var errorCallback = function (err) {
                 if(err.data === "Username not found")
                 {
-                    $scope.existserror = true;
-                }
-                else {
                     $scope.showerror = true;
                 }
+
 
                 console.log("Login error" +JSON.stringify(err));
 

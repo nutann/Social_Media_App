@@ -45,10 +45,10 @@ router.post('/getUserInfo', function(req, res){
         if(err){
 
                 console.log("Error");
-                res.status(400).send("Error");
+                res.status(400).send("Username not found");
 
         }
-        else{
+        else {
 
             /* if(results.length!=1){
              console.log("Login error. Username or password is incorrect. Try again");

@@ -28,9 +28,12 @@ function dbConnector() {
         console.log("Fetching from db with details "+JSON.stringify(user));
         var cb = function (err, results) {
             console.log("error occured in fetch" +err+ "     " +results );
+            if(results.length == 0){
+                err = 400;
+            }
             callback(err, results);
         }
-        userDb.run("SELECT * from user WHERE email=? AND password=?", user.userName,user.password,cb);
+        userDb.all("SELECT * from user WHERE email=? AND password=?", user.userName,user.password,cb);
     }
 
 
