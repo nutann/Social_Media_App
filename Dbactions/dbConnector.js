@@ -24,6 +24,16 @@ function dbConnector() {
         userDb.run("INSERT into user(email,firstName,lastName,password) VALUES (?,?,?,?)",user.email,user.firstName,user.lastName,user.password,cb);
     }
 
+    function fetchDb(user,callback) {
+        console.log("Fetching from db with details "+JSON.stringify(user));
+        var cb = function (err, results) {
+            console.log("error occured in fetch" +err+ "     " +results );
+            callback(err, results);
+        }
+        userDb.run("SELECT * from user WHERE email=? AND password=?", user.userName,user.password,cb);
+    }
+
+
     function closeDb() {
 
         userDb.close();
@@ -31,8 +41,8 @@ function dbConnector() {
     return {
         initializeDb : initializeDb,
         updateDb : updateDb,
-        closeDb : closeDb
-
+        closeDb : closeDb,
+        fetchDb : fetchDb
     }
 
 }
