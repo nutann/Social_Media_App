@@ -6,14 +6,13 @@
 
     var app = angular.module('SocialMedia');
 
-    app.controller('welcomeCtrl', function($state, $scope) {
-        $scope.join = function(event){
-            event.preventDefault();
-            console.log("entered welcome")
+    app.controller('welcomeCtrl', function($state, $scope,socket) {
+        $scope.users = [];
+        socket.on('loggedin-users',function(data){
+        	console.log("logged in users " +JSON.stringify(data));
+        	$scope.users = data;
+        })
 
-            $state.go("main")
-
-    }
     });
 
 

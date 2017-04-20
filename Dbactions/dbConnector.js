@@ -3,17 +3,21 @@
  */
 
 sqlite3 = require('sqlite3');
+var _ = require('lodash');
 
 function dbConnector() {
     var userDb;
+    userDb = new sqlite3.Database("./users.db");
 
     function initializeDb() {
+
         console.log("initialize db *********");
-        userDb = new sqlite3.Database("./users.db");
-        userDb.run("CREATE TABLE IF NOT EXISTS user (email Text PRIMARY KEY,firstName Text," +
-                    " lastName TEXT,password Text)");
+        
+        userDb.run("CREATE TABLE IF NOT EXISTS userinfo (email Text PRIMARY KEY,firstName Text," +
+                    " lastName TEXT,password Text,socketid INTEGER)");
 
     }
+
 
     function updateDb(user,callback) {
         console.log("updating the db with details "+JSON.stringify(user));
@@ -21,7 +25,7 @@ function dbConnector() {
             console.log("error occured" +err);
             callback(err);
         }
-        userDb.run("INSERT into user(email,firstName,lastName,password) VALUES (?,?,?,?)",user.email,user.firstName,user.lastName,user.password,cb);
+        userDb.run("INSERT into userinfo(email,firstName,lastName,password,socketid) VALUES (?,?,?,?,?)",user.email,user.firstName,user.lastName,user.password,0,cb);
     }
 
     function fetchDb(user,callback) {
@@ -33,19 +37,40 @@ function dbConnector() {
             }
             callback(err, results);
         }
-        userDb.all("SELECT * from user WHERE email=? AND password=?", user.userName,user.password,cb);
+        userDb.all("SELECT * from userinfo WHERE email=? AND password=?", user.userName,user.password,cb);
     }
 
 
-    function closeDb() {
+    function closeDb(callback) {
+       
+        function cb(err,results){
+             console.log("close db ")
+            userDb.close(); 
+            callback();
+        }
 
-        userDb.close();
+        userDb.run("UPDATE userinfo SET socketid=0",cb);
+
+       
     }
+
+    function updatesocketid(data,socketid,callback){
+
+        userDb.run("UPDATE userinfo SET socketid=? WHERE email=?",socketid,data.name);
+         var cb = function (err, results) {
+            console.log(" get the result with updated data" +JSON.stringify(results) );
+            callback(results);
+        }
+         userDb.all("SELECT * from userinfo WHERE socketid!=0",cb);
+
+    }
+
     return {
         initializeDb : initializeDb,
         updateDb : updateDb,
         closeDb : closeDb,
-        fetchDb : fetchDb
+        fetchDb : fetchDb,
+        updatesocketid :updatesocketid
     }
 
 }

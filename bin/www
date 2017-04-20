@@ -7,6 +7,22 @@
 var app = require('../app');
 var debug = require('debug')('Social_Network_App:server');
 var http = require('http');
+var dbConn = require("../Dbactions/dbConnector").DbConnector;
+var db = new dbConn();
+var nodeCleanup = require('node-cleanup');
+
+ 
+nodeCleanup(function (exitCode, signal) {
+    if (signal) {
+        db.closeDb(function done() {
+            // calling process.exit() won't inform parent process of signal 
+            process.kill(process.pid, signal);
+        });
+        nodeCleanup.uninstall(); // don't call cleanup handler again 
+        return false;
+    }
+});
+
 /**
  * Get port from environment and store in Express.
  */
@@ -26,7 +42,7 @@ var io = require('socket.io')(server);
  */
 
 server.listen(port, function () {
-    console.log("Listening on port :" +port);
+    console.log("Listening on port ************:" +port);
 });
 server.on('error', onError);
 server.on('listening', onListening);
@@ -65,4 +81,13 @@ function onListening() {
 
 io.on('connection', function(socket) {
     console.log('new connection made');
+
+    socket.on('join',function(data){
+      console.log("joined **********" +data);
+      function cb(rows){
+        io.emit('loggedin-users', rows);
+      }
+      db.updatesocketid(data,socket.id,cb);
+    })
 });
+

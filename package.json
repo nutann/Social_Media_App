@@ -11,7 +11,9 @@
     "debug": "~2.1.1",
     "express": "~4.10.6",
     "hbs": "~2.8.0",
+    "lodash": "^4.17.4",
     "morgan": "~1.5.1",
+    "node-cleanup": "^2.1.2",
     "serve-favicon": "~2.2.0",
     "socket.io": "^1.7.3",
     "sqlite3": "^3.1.8"

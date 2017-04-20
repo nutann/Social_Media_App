@@ -6,7 +6,7 @@
 
     var app = angular.module('SocialMedia');
 
-    app.controller('loginCtrl',function ($scope,$state,$http) {
+    app.controller('loginCtrl',function ($scope,$state,$http,socket) {
         $scope.showerror = false;
 
         $scope.goBack = function() {
@@ -24,6 +24,9 @@
             console.log("Login called");
             var successCallback = function (response) {
                 $scope.showerror = false;
+                socket.emit('join',{
+                    name : $scope.userName
+                });
                 $state.go("welcome")
                 console.log("Login success" +response.data);
 
@@ -41,7 +44,7 @@
             }
 
             //TODO make a ajax query to send data to the server
-            $http.post('/getUserInfo', loginData).then(successCallback, errorCallback);
+            $http.post('/login', loginData).then(successCallback, errorCallback);
 
 
         }

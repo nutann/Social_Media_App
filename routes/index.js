@@ -36,24 +36,18 @@ router.post('/updateUserInfo', function(req, res) {
 });
 
 
-router.post('/getUserInfo', function(req, res){
+router.post('/login', function(req, res){
     console.log("Login request received" + JSON.stringify(req.body.userInfo));
 
     var callBack= function(err, results) {
         console.log("index.js callback");
 
         if(err){
-
                 console.log("Error");
                 res.status(400).send("Username not found");
-
         }
         else {
 
-            /* if(results.length!=1){
-             console.log("Login error. Username or password is incorrect. Try again");
-             res.status(400).send("Login error. Username or password is incorrect. Try again");
-             } */
             console.log("Logged in successfully");
             res.send("success");
         }
