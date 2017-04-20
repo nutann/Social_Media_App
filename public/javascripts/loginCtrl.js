@@ -24,7 +24,7 @@
             console.log("Login called");
             var successCallback = function (response) {
                 $scope.showerror = false;
-                $state.go("home")
+                $state.go("welcome")
                 console.log("Login success" +response.data);
 
 

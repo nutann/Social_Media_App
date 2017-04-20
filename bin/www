@@ -7,7 +7,6 @@
 var app = require('../app');
 var debug = require('debug')('Social_Network_App:server');
 var http = require('http');
-
 /**
  * Get port from environment and store in Express.
  */
@@ -20,12 +19,15 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+var io = require('socket.io')(server);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(port, function () {
+    console.log("Listening on port :" +port);
+});
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -60,3 +62,7 @@ function onError(error) {
 function onListening() {
   debug('Listening on port ' + server.address().port);
 }
+
+io.on('connection', function(socket) {
+    console.log('new connection made');
+});

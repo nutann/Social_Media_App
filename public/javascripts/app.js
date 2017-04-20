@@ -24,8 +24,15 @@
                 templateUrl:'signup.html',
                 controller :'signupCtrl'
             })
+            .state('welcome',{
+                url : '/welcome',
+                templateUrl : 'welcome.html',
+                controller : 'welcomeCtrl'
+            })
             .state('main',{
-                //TODO add main page
+                url : '/main',
+                templateUrl : 'main.html',
+                controller : 'mainCtrl'
             });
     });
 
