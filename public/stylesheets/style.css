@@ -76,5 +76,73 @@ input.ng-pristine  {
 }
 
 
+            .popup-box
+            {
+                
+                position: fixed;
+               
+                right: 220px;
+                height: 285px;
+                background-color: rgb(237, 239, 244);
+                width: 300px;
+                border: 1px solid rgba(29, 49, 91, .3);
+            }
+            
+            .popup-box .popup-head
+            {
+                background-color: #6d84b4;
+                padding: 20px;
+                color: white;
+                font-weight: bold;
+                font-size: 14px;
+                clear: both;
+            }
+            
+            .popup-box .popup-head .popup-head-left
+            {
+                float: left;
+            }
+            
+            .popup-box .popup-head .popup-head-right
+            {
+                float: right;
+                opacity: 0.5;
+            }
+            
+            .popup-box .popup-head .popup-head-right a
+            {
+                text-decoration: none;
+                color: inherit;
+            }
+            
+            .popup-box .popup-messages
+            {
+                height: 80%;
+                overflow-y: scroll;
+            }
+
+
+.eachuser {
+
+  width: 300px;
+  height: 30px;
+  background-color: white;
+  border-color: #2e6da4;
+  font-size: 14px;
+  border: 1px solid black;
+   border-radius: 5px;
+   color: black;
+   text-align: center;
+
+}
+.eachuser:hover {
+
+  background-color: #6d84b4;
+  }
+ul {
+  list-style: none;
+  color: white;
+}
+
 
 

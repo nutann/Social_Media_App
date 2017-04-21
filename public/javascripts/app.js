@@ -3,7 +3,7 @@
  */
 (function () {
 
-    var app = angular.module('SocialMedia',["ui.router"]);
+    var app = angular.module('SocialMedia',['ui.router','ngSanitize']);
 
     app.config(function ($stateProvider,$urlRouterProvider) {
 
@@ -28,6 +28,14 @@
                 url : '/welcome/{userName}',
                 templateUrl : 'welcome.html',
                 controller : 'welcomeCtrl'
+            })
+            .state('welcome.chat',{
+                url : '/chat',
+                templateUrl : 'chat.html',
+                controller: function($scope) {
+                    console.log("state is chat")
+                $scope.user = {name: "Nutan"};
+                }
             })
             .state('main',{
                 url : '/main',

@@ -2,10 +2,16 @@
 <h1>logged in users</h1>
 <div class="row">
     <ul class="horizontal-list">
-        <li ng-repeat = "user in users">
+        <li class= "eachuser" ng-repeat = "user in users">
+        <div ng-click="joinchat(user)">
             {{user.firstName}}
             {{user.email}}
+        </div>
         </li>
+        <div ui-view></div>
     </ul>
+    
 </div>
+
+<div ng-bind-html="chathtml" compile-template></div>
 </div>
