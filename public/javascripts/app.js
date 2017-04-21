@@ -25,7 +25,7 @@
                 controller :'signupCtrl'
             })
             .state('welcome',{
-                url : '/welcome',
+                url : '/welcome/{userName}',
                 templateUrl : 'welcome.html',
                 controller : 'welcomeCtrl'
             })

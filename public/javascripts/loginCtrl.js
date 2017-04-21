@@ -27,7 +27,7 @@
                 socket.emit('join',{
                     name : $scope.userName
                 });
-                $state.go("welcome")
+                $state.go("welcome", { "userName": $scope.userName})
                 console.log("Login success" +response.data);
 
 
