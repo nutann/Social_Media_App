@@ -83,11 +83,21 @@ io.on('connection', function(socket) {
     console.log('new connection made');
 
     socket.on('join',function(data){
+      socket.name = data.name;
       console.log("joined **********" +data);
       function cb(rows){
-        io.emit('loggedin-users', rows);
+      io.emit('loggedin-users', rows);
       }
-      db.updatesocketid(data,socket.id,cb);
-    })
+      db.updatesocketid(socket.name,socket.id,cb);
+    });
+
+    socket.on('disconnect', function() {
+      socket.id = 0;
+      function cb(rows){
+      io.emit('loggedin-users', rows);
+      }
+    db.updatesocketid(socket.name,socket.id,cb);
+   
+  });
 });
 
