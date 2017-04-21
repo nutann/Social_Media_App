@@ -56,7 +56,7 @@ function dbConnector() {
 
     function updatesocketid(data,socketid,callback){
 
-        userDb.run("UPDATE userinfo SET socketid=? WHERE email=?",socketid,data.name);
+        userDb.run("UPDATE userinfo SET socketid=? WHERE email=?",socketid,data);
          var cb = function (err, results) {
             console.log(" get the result with updated data" +JSON.stringify(results) );
             callback(results);
