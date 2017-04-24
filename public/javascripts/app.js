@@ -3,7 +3,7 @@
  */
 (function () {
 
-    var app = angular.module('SocialMedia',['ui.router','ngSanitize']);
+    var app = angular.module('SocialMedia',['ui.router','lodash']);
 
     app.config(function ($stateProvider,$urlRouterProvider) {
 

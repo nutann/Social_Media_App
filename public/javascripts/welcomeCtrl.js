@@ -6,11 +6,12 @@
 
     var app = angular.module('SocialMedia');
 
-    app.controller('welcomeCtrl', function($state, $scope,socket, $stateParams, $sce) {
+    app.controller('welcomeCtrl', function($state, $scope,socket, $stateParams,_) {
         $scope.users = [];
-        $scope.chattingwith = {};
+        $scope.chattingwithusers = [];
         $scope.messages = [];
         $scope.message = "";
+        var maximumChats = 3;
         socket.on('loggedin-users',function(data){
         	console.log("logged in users " +JSON.stringify(data));
         	$scope.users = data.filter(function(item){
@@ -18,15 +19,22 @@
         	});
         })
 
-        $scope.sendMessage = function(event,message) {
+        $scope.sendMessage = function(event,chattingwith,message) {
+
+
         	event.preventDefault();
-        	console.log("message to be sent is " +message +"user is " +JSON.stringify($scope.chattingwith));
+        	console.log("message to be sent is " +message +"user is " +JSON.stringify(chattingwith));
         	var data = {
         		message : message,
-        		user : $scope.chattingwith
+        		user : chattingwith
         	}
 
-        	$scope.messages.push(data);
+        	//$scope.messages.push(data);
+
+        	var chattingwith = _.find($scope.chattingwithusers, function(o) { return o.email === chattingwith.email; });
+        	console.log("chattingwith : " +JSON.stringify(chattingwith));
+        	if(chattingwith)
+        	chattingwith.messages.push(data);
         	 $scope.message = "";
         	socket.emit("message-sent",data)
         }
@@ -39,8 +47,12 @@
         
 
         $scope.joinchat = function(user){
-        	 $scope.chattingwith = user;
-
+        	if(($scope.chattingwithusers.length+1) > maximumChats){
+        		$scope.chattingwithusers.shift();
+        	}
+        	 $scope.chattingwithusers.push({user,
+        	 								messages : []});
+        	 console.log("Users=== " +JSON.stringify($scope.chattingwithusers));
 
         	      
      

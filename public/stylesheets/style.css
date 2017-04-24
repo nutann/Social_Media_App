@@ -75,11 +75,20 @@ input.ng-pristine  {
   border: 1px solid blue;
 }
 
+.eachchat {
+  float: right
+}
+.chat {
+  width :100%;
+  height: 300px;
+  margin-left: 100px;
+}
+
 
             .popup-box
             {
                 
-                position: fixed;
+                position: relative;
                
                 right: 220px;
                 height: 285px;
