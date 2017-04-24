@@ -9,6 +9,7 @@
     app.controller('welcomeCtrl', function($state, $scope,socket, $stateParams, $sce) {
         $scope.users = [];
         $scope.chattingwith;
+        $scope.messages = [];
         socket.on('loggedin-users',function(data){
         	console.log("logged in users " +JSON.stringify(data));
         	$scope.users = data.filter(function(item){
@@ -19,11 +20,19 @@
         $scope.sendMessage = function(event,message) {
         	event.preventDefault();
         	console.log("message to be sent is " +message +"user is " +JSON.stringify($scope.chattingwith));
-        	socket.emit("message sent",{
+        	
+        	socket.emit("message-sent",{
         		message : message,
         		user : $scope.chattingwith
         	})
         }
+
+        
+        socket.on('message-received', function(data){
+        	console.log("message-received"+ JSON.stringify(data.message));
+        	$scope.messages.push(data);
+        });
+        
 
         $scope.joinchat = function(user){
         	 $scope.chattingwith = user;
