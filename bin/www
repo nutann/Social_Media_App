@@ -103,6 +103,7 @@ io.on('connection', function(socket) {
     socket.on('message-sent', function(data){
       console.log("server side message-received")
       socket.broadcast.to(data.user.socketid).emit('message-received',data);
+      
     });
 
 });

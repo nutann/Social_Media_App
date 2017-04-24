@@ -13,5 +13,35 @@
     
 </div>
 
-<div ng-bind-html="chathtml" compile-template></div>
+<div ng-show = "chattingwith.email" class="popup-box" id={{chattingwith.email}} > 
+    <div class="popup-head">
+        <div class="popup-head-left">{{chattingwith.firstName}} 
+        </div>
+        <div class="popup-head-right">
+        <a href="">&#10005;</a>
+        </div>
+        <div style="clear: both">
+        </div>
+    </div>
+    <div class="popup-messages">
+     <div class='well chatbox' id='chat_history'>
+      <ul class='list-unstyled'>
+        <li style = "color:black" ng-repeat='m in messages'>
+          <i class='fa fa-comment'></i>
+          &nbsp;
+          <b>{{m.user.firstName}} </b>:
+          &nbsp;
+          {{m.message}}
+        </li>
+      </ul>
+    </div>
+        
+    </div>
+    <div style="clear: both">
+        
+    </div>
+    <form ng-submit="sendMessage($event,message)"> <input class="input-sm form-control" ng-model="message" type="text" placeholder="Type a message...">
+    <input class="btn btn-default"  type="submit" value="Send"> 
+    </form> 
 </div>
+
