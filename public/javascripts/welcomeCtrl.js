@@ -11,6 +11,7 @@
         $scope.chattingwithusers = [];
         $scope.messages = [];
         $scope.message = "";
+        $scope.currentUser = $stateParams.userName;
         var maximumChats = 3;
         socket.on('loggedin-users',function(data){
         	console.log("logged in users " +JSON.stringify(data));
@@ -31,10 +32,8 @@
 
         	//$scope.messages.push(data);
 
-        	var chattingwith = _.find($scope.chattingwithusers, function(o) { return o.email === chattingwith.email; });
-        	console.log("chattingwith : " +JSON.stringify(chattingwith));
-        	if(chattingwith)
-        	chattingwith.messages.push(data);
+        	chattingwith.messages.push({name : $scope.currentUser,
+        								message : message});
         	 $scope.message = "";
         	socket.emit("message-sent",data)
         }
@@ -42,7 +41,11 @@
         
         socket.on('message-received', function(data){
         	console.log("message-received"+ JSON.stringify(data));
-        	$scope.messages.push(data);
+        	var chattingwith = _.find($scope.chattingwithusers, function(o) { return o.email === data.user.email; });
+        	console.log("chattingwith : " +JSON.stringify(chattingwith));
+        	
+        	chattingwith.messages.push({name : data.user.firstName,
+        								message : data.message});
         });
         
 
