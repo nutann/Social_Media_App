@@ -57,6 +57,12 @@
         
 
         $scope.joinchat = function(user){
+            var chattingwith = _.find($scope.chattingwithusers, function(o) { return o.socketid === user.socketid; });
+            if(chattingwith){
+                //duplicate chat window is already open
+                console.log("duplicate chat window is already open");
+                return;
+            }
         	if(($scope.chattingwithusers.length+1) > maximumChats){
         		$scope.chattingwithusers.shift();
         	}
