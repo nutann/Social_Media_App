@@ -101,8 +101,8 @@ io.on('connection', function(socket) {
   });
 
     socket.on('message-sent', function(data){
-      console.log("server side message-sent to " +JSON.stringify(data.user));
-      socket.broadcast.to(data.user.socketid).emit('message-received',data);
+      console.log("server side message-sent to " +JSON.stringify(data));
+      socket.broadcast.to(data.to).emit('message-received',data);
 
     });
 

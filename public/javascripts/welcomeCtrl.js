@@ -25,15 +25,19 @@
 
         	event.preventDefault();
         	console.log("message to be sent is " +message +"user is " +JSON.stringify(chattingwith));
-        	var data = {
+        	
+            var data = {
         		message : message,
-        		user : chattingwith
+        		to : chattingwith.socketid,
+                from : $scope.currentUser
         	}
 
         	//$scope.messages.push(data);
 
-        	chattingwith.messages.push({name : $scope.currentUser,
-        								message : message});
+        	chattingwith.messages.push({
+                name : "me",
+                message : message
+            });
         	 $scope.message = "";
         	socket.emit("message-sent",data)
         }
@@ -41,11 +45,14 @@
         
         socket.on('message-received', function(data){
         	console.log("message-received"+ JSON.stringify(data));
-        	var chattingwith = _.find($scope.chattingwithusers, function(o) { return o.email === data.user.email; });
+            console.log("chatwith users :  **"+ JSON.stringify($scope.chattingwithusers));
+        	var chattingwith = _.find($scope.chattingwithusers, function(o) { return o.email === data.from; });
         	console.log("chattingwith : " +JSON.stringify(chattingwith));
         	
-        	chattingwith.messages.push({name : data.user.firstName,
-        								message : data.message});
+        	chattingwith.messages.push({
+                name : chattingwith.firstName,
+                message : data.message
+            });
         });
         
 
@@ -53,8 +60,8 @@
         	if(($scope.chattingwithusers.length+1) > maximumChats){
         		$scope.chattingwithusers.shift();
         	}
-        	 $scope.chattingwithusers.push({user,
-        	 								messages : []});
+            user.messages = [];
+        	 $scope.chattingwithusers.push(user);
         	 console.log("Users=== " +JSON.stringify($scope.chattingwithusers));
 
         	      

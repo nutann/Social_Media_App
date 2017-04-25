@@ -7,6 +7,7 @@
 		var socket = io.connect();
 
 		function on(eventName,callback) {
+			console.log("event recieved ****" +eventName);
 			socket.on(eventName,function(){
 				var args = arguments;
 				$rootScope.$apply(function(){
