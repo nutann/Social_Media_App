@@ -54,7 +54,24 @@
                 message : data.message
             });
         });
-        
+
+        $scope.closeChat = function(user){
+                console.log("To be closed");
+                for(var i = 0; i < $scope.chattingwithusers.length; i++)
+                {
+                    if(user.email == $scope.chattingwithusers[i].email)
+                    {
+                        Array.remove($scope.chattingwithusers, i);                     
+                        return;
+                    }
+                }        
+        };
+
+         Array.remove = function(array, from, to) {
+                var rest = array.slice((to || from) + 1 || array.length);
+                array.length = from < 0 ? array.length + from : from;
+                return array.push.apply(array, rest);
+            };
 
         $scope.joinchat = function(user){
             var chattingwith = _.find($scope.chattingwithusers, function(o) { return o.socketid === user.socketid; });
