@@ -10,7 +10,8 @@
         $scope.users = [];
         $scope.chattingwithusers = [];
         $scope.messages = [];
-        $scope.message = "";
+        $scope.t = {};
+        $scope.t.message = "";
         $scope.currentUser = $stateParams.userName;
         var maximumChats = 3;
         socket.on('loggedin-users',function(data){
@@ -20,14 +21,14 @@
         	});
         })
 
-        $scope.sendMessage = function(event,chattingwith,message) {
+        $scope.sendMessage = function(event,chattingwith) {
 
 
         	event.preventDefault();
-        	console.log("message to be sent is " +message +"user is " +JSON.stringify(chattingwith));
+        	console.log("message to be sent is " +$scope.t.message +"user is " +JSON.stringify(chattingwith));
         	
             var data = {
-        		message : message,
+        		message : $scope.t.message,
         		to : chattingwith.socketid,
                 from : $scope.currentUser
         	}
@@ -36,9 +37,9 @@
 
         	chattingwith.messages.push({
                 name : "me",
-                message : message
+                message : $scope.t.message
             });
-        	 $scope.message = "";
+        	 $scope.t.message = "";
         	socket.emit("message-sent",data)
         }
 
