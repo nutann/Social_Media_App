@@ -6,6 +6,10 @@
         <div ng-click="joinchat(user)">
             {{user.firstName}}
             {{user.email}}
+            <div class="newmessage" ng-show = "user.newMessageCount">
+            
+              {{user.newMessageCount}}
+            </div>
         </div>
         </li>
         <div ui-view></div>
@@ -15,7 +19,7 @@
 
 <ul class="chat">
     <li class = "eachchat" ng-repeat = "chattingwith in chattingwithusers">
-        <div ng-show = "chattingwith.email" class="popup-box" id={{chattingwith.email}} > 
+        <div ng-show = "chattingwith.active" class="popup-box" id={{chattingwith.email}} > 
     <div class="popup-head">
         <div class="popup-head-left">{{chattingwith.firstName}} 
         </div>

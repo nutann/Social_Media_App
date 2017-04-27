@@ -17,6 +17,7 @@
         socket.on('loggedin-users',function(data){
         	console.log("logged in users " +JSON.stringify(data));
         	$scope.users = data.filter(function(item){
+                    item.newMessageCount = 0;
         			return item.email !== $stateParams.userName;
         	});
         })
@@ -50,48 +51,53 @@
         	var chattingwith = _.find($scope.chattingwithusers, function(o) { return o.email === data.from; });
         	console.log("chattingwith : " +JSON.stringify(chattingwith));
         	
-        	chattingwith.messages.push({
+            if(chattingwith)
+            {
+                chattingwith.messages.push({
                 name : chattingwith.firstName,
                 message : data.message
-            });
+                });
+            }
+            else {
+                chattingwith = _.find($scope.users, function(o) { return o.email === data.from; });
+                console.log("not active user " +JSON.stringify(chattingwith));
+                chattingwith.messages = [];
+                chattingwith.messages.push({
+                    name : chattingwith.firstName,
+                    message : data.message
+                });
+                chattingwith.active = false;
+                $scope.chattingwithusers.push(chattingwith);
+                console.log("not active user message count " +chattingwith.messageCount);
+
+            }
+            if(!chattingwith.active){
+                chattingwith.newMessageCount+=1;
+            }
+        	
         });
 
         $scope.closeChat = function(user){
                 console.log("To be closed");
-                for(var i = 0; i < $scope.chattingwithusers.length; i++)
-                {
-                    if(user.email == $scope.chattingwithusers[i].email)
-                    {
-                        Array.remove($scope.chattingwithusers, i);                     
-                        return;
-                    }
-                }        
+                var chattingwith = _.find($scope.chattingwithusers, function(o) { return o.socketid === user.socketid; });
+                chattingwith.active = false;
         };
-
-         Array.remove = function(array, from, to) {
-                var rest = array.slice((to || from) + 1 || array.length);
-                array.length = from < 0 ? array.length + from : from;
-                return array.push.apply(array, rest);
-            };
 
         $scope.joinchat = function(user){
             var chattingwith = _.find($scope.chattingwithusers, function(o) { return o.socketid === user.socketid; });
+            user.newMessageCount = 0;
+            user.active = true;
             if(chattingwith){
                 //duplicate chat window is already open
                 console.log("duplicate chat window is already open");
                 return;
             }
         	if(($scope.chattingwithusers.length+1) > maximumChats){
+                //maximum 3 windows can be open
         		$scope.chattingwithusers.shift();
         	}
             user.messages = [];
-        	 $scope.chattingwithusers.push(user);
-        	 console.log("Users=== " +JSON.stringify($scope.chattingwithusers));
-
-        	      
-     
-                //document.getElementsByTagName("body")[0].innerHTML = document.getElementsByTagName("body")[0].innerHTML + element;  
-
+        	$scope.chattingwithusers.push(user);
         }
 
     });
