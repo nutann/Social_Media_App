@@ -165,4 +165,15 @@ ul {
 
 }
 
+.add-friends {
+  width: 300px;
+  height: 300px;
+  color: black;
+
+}
+
+.list-group-item {
+  color: black;
+}
+
 

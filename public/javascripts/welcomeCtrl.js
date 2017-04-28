@@ -14,6 +14,7 @@
         $scope.t.message = "";
         $scope.currentUser = $stateParams.userName;
         var maximumChats = 3;
+        $scope.addfriendsselected = false;
         socket.on('loggedin-users',function(data){
         	console.log("logged in users " +JSON.stringify(data));
         	$scope.users = data.filter(function(item){
@@ -100,11 +101,25 @@
         	$scope.chattingwithusers.push(user);
         }
 
-        $scope.showUsers = function(){
-        console.log("Show users");
+        $scope.showUsers = function(chattingwith){
+       console.log("add friends "+JSON.stringify(chattingwith));
+        $scope.addfriendsselected = true;
+         $scope.friendslist = $scope.users.filter(function(item){
+                    
+                    return item.email !== chattingwith.email;
+            });
+
+         console.log("$scope.friendslist : " +JSON.stringify($scope.friendslist));
         }
 
+
+         $scope.joinprivatechat = function(user){
+        console.log("add joinprivatechat "+JSON.stringify(user));
+
+    }
+
     });
+   
 
 
 

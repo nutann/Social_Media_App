@@ -24,7 +24,7 @@
         <div class="popup-head-left">{{chattingwith.firstName}} 
         </div>
         <div class="popup-head-right">
-        <a href ng-click=showUsers() class="glyphicon glyphicon-plus"></a>
+        <a href ng-click=showUsers(chattingwith) class="glyphicon glyphicon-plus"></a>
         <a href ng-click=closeChat(chattingwith)>&#10005;</a>
         </div>
         <div style="clear: both">
@@ -53,6 +53,27 @@
 </div>
     </li>
 </ul>
+
+<div class="add-friends panel-primary panel">
+    <div class="panel-heading text-center">Add Friends</div>
+    <div class="panel_body">
+
+  <div class="row" ng-show="addfriendsselected">
+    <ul class="list-group">
+
+        <li class="list-group-item" ng-repeat = "user in friendslist">
+        <div ng-click="joinprivatechat(user)">
+            {{user.firstName}}
+            {{user.email}}
+        </div>
+        </li>
+        <div ui-view></div>
+    </ul>
+    
+  </div>
+  </div>
+
+</div>
 
 
 
