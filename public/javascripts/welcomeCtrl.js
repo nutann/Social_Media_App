@@ -100,8 +100,12 @@
         	$scope.chattingwithusers.push(user);
         }
 
+        $scope.showUsers = function(){
+        console.log("Show users");
+        }
+
     });
 
-    
+
 
 })();
