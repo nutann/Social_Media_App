@@ -130,6 +130,11 @@ input.ng-pristine  {
                 overflow-y: scroll;
             }
 
+             .popup-box .messageContainer
+            {
+                height: 80%;
+            }
+
 
 .eachuser {
 
