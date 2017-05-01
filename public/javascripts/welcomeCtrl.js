@@ -13,7 +13,7 @@
                 $scope.t.message = "";
                 $scope.currentUser = $stateParams.userName;
                 var maximumChats = 3;
-                $scope.addfriendsselected = false;
+             
                 $scope.people = [];
                 socket.on('loggedin-users', function(data) {
                     console.log("logged in users " + JSON.stringify(data));
@@ -31,7 +31,7 @@
 
                     var data = {
                         message: $scope.t.message,
-                        to: chattingwith.socketid,
+                        to: chattingwith.group || chattingwith.socketid,
                         from: $scope.currentUser
                     }
 
@@ -81,10 +81,15 @@
                 });
 
                 $scope.closeChat = function(user) {
+                    if(user.addfriendsselected){
+                       user.addfriendsselected = false;
+                        return;
+                    }
                     console.log("To be closed");
                     var chattingwith = _.find($scope.chattingwithusers, function(o) {
                         return o.socketid === user.socketid;
                     });
+
                     chattingwith.active = false;
                 };
 
@@ -110,7 +115,7 @@
 
                 $scope.showUsers = function(chattingwith) {
                     console.log("add friends " + JSON.stringify(chattingwith));
-                    $scope.addfriendsselected = true;
+                    chattingwith.addfriendsselected = true;
                     $scope.friendslist = $scope.users.filter(function(item) {
 
                         return item.email !== chattingwith.email;
@@ -120,16 +125,31 @@
                 }
 
 
-                $scope.createGroup = function() {
+                $scope.createGroup = function(user) {
                     console.log("Entered createGroup ");
-                    $scope.addfriendsselected = false;
+                    user.addfriendsselected = false;
+
                    
                     $scope.people = $scope.users.filter(function(item){
                         console.log("item.check :" +item.check);
                         return item.check == true;
                     })
-                    console.log("$scope.people : " + JSON.stringify($scope.people));
-                    group.createGroup(id ,socketid, $scope.currentUser);
+                   // $scope.people.add(user);
+                    var id = 0;
+                    if($scope.people.length > 0){
+                        user.chattingfriends = "";
+                        $scope.people.forEach(function(person){
+                            user.chattingfriends =  "," + person.firstName;
+
+                        })
+                         $scope.people.push(user);
+
+                        user.group = 1;
+                         console.log("$scope.people : " + JSON.stringify($scope.people));
+                    group.createGroup(id,user.socketid,$scope.currentUser,$scope.people);
+
+                    }
+                   
                     
                 }
 

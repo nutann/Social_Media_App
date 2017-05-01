@@ -3,12 +3,22 @@
 
   app = angular.module('SocialMedia');
 
-  app.factory('group',function ($rootScope) {
+  app.factory('group',function ($rootScope,socket) {
 
-  function createGroup(id, socketid, owner) {
+  function createGroup(id, socketid, owner,people) {
     this.id = id;
     this.owner = owner;
-    this.people = [];
+    this.people = people;
+    socket.emit("create-group",id,function(){
+      console.log("group created");
+      var data = {
+        groupid : id,
+        friends : people
+      }
+      console.log("data to be sent is "+JSON.stringify(data));
+      socket.emit("add-users",data);
+    });
+
   };
 
 

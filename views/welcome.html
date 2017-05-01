@@ -20,9 +20,9 @@
   <li class = "eachchat" ng-repeat = "chattingwith in chattingwithusers">
     <div ng-show = "chattingwith.active" class="popup-box" id={{chattingwith.email}} > 
       <div class="popup-head">
-         <div class="popup-head-left" ng-if ="!addfriendsselected" id="popup-heading">{{chattingwith.firstName}} 
+         <div class="popup-head-left" ng-if ="!chattingwith.addfriendsselected" id="popup-heading">{{chattingwith.firstName}} {{chattingwith.chattingfriends}}
         </div>
-        <div class="popup-head-left" ng-if ="addfriendsselected" id="popup-heading">Add Friends
+        <div class="popup-head-left" ng-if ="chattingwith.addfriendsselected" id="popup-heading">Add Friends
         </div>
         <div class="popup-head-right">
         <a href ng-click=showUsers(chattingwith) class="glyphicon glyphicon-plus"></a>
@@ -31,7 +31,7 @@
         <div style="clear: both">
         </div>
       </div>
-    <div class="messageContainer" ng-show="!addfriendsselected">
+    <div class="messageContainer" ng-show="!chattingwith.addfriendsselected">
       <div class="popup-messages" >
         <div class='well chatbox' id='chat_history'>
           <ul class='list-unstyled'>
@@ -55,37 +55,21 @@
     </form> 
   </div>
 
-    <div class="list-group" ng-show="addfriendsselected">
-      <a class="list-group-item" ng-repeat = "user in friendslist" ng-click="joingroupchat(user)">    {{user.firstName}}
-          {{user.email}}</a>
-    </div>
-    
-  </div>
-    </li>
-</ul>
+    <div class="list-group" ng-show="chattingwith.addfriendsselected">
 
-<div class="add-friends panel-primary panel" ng-show="addfriendsselected">
-  <div class="panel-heading text-center" >Add Friends</div>
-    <div class="panel_body">
-      <div class="row">
-        <ul class="list-group">
-
-          <li class="list-group-item" ng-repeat = "user in friendslist">
-            <div>
+           <div class="list-group-item" ng-repeat = "user in friendslist">
             {{user.firstName}}
             {{user.email}}
             &nbsp;&nbsp;
             <input type="checkbox" name="checkbox" ng-model= "user.check">
             </div>
-          </li>
-          <div ui-view></div>
-        </ul>
-      </div>
-    </div>
-  <form id=userForm ng-submit="createGroup()"> 
+              <form id=userForm ng-submit="createGroup(chattingwith)"> 
     <input class="btn btn-default"  type="submit" value="Create Group"> 
     </form>
-</div>
-
+    </div>
+    
+  </div>
+    </li>
+</ul>
 
 
