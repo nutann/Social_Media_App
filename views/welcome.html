@@ -54,25 +54,27 @@
     </li>
 </ul>
 
-<div class="add-friends panel-primary panel">
-    <div class="panel-heading text-center">Add Friends</div>
+<div class="add-friends panel-primary panel" ng-show="addfriendsselected">
+  <div class="panel-heading text-center" >Add Friends</div>
     <div class="panel_body">
+      <div class="row">
+        <ul class="list-group">
 
-  <div class="row" ng-show="addfriendsselected">
-    <ul class="list-group">
-
-        <li class="list-group-item" ng-repeat = "user in friendslist">
-        <div ng-click="joinprivatechat(user)">
+          <li class="list-group-item" ng-repeat = "user in friendslist">
+            <div>
             {{user.firstName}}
             {{user.email}}
-        </div>
-        </li>
-        <div ui-view></div>
-    </ul>
-    
-  </div>
-  </div>
-
+            &nbsp;&nbsp;
+            <input type="checkbox" name="checkbox" ng-model= "user.check">
+            </div>
+          </li>
+          <div ui-view></div>
+        </ul>
+      </div>
+    </div>
+  <form id=userForm ng-submit="createGroup()"> 
+    <input class="btn btn-default"  type="submit" value="Create Group"> 
+    </form>
 </div>
 
 
