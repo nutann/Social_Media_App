@@ -112,12 +112,15 @@ io.on('connection', function(socket) {
       });
 
       //this is the part to broadcast message to all clients regarding the new user
-     /* var clients = io.sockets.clients(1);
+      var clients = io.sockets.adapter.rooms[1];
+      var msg = "You are invited to a group chat"
       data = {
         groupid : 1,
-        clients : clients
+        clients : clients,
+        from:socket.name,
+        message:msg
       }
-      socket.broadcast.to(1).emit('updategroup', data);*/
+      socket.broadcast.to(1).emit('updategroup', data);
       
       //socket.join(data)
     })
