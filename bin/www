@@ -110,6 +110,14 @@ io.on('connection', function(socket) {
      
 
       });
+
+      //this is the part to broadcast message to all clients regarding the new user
+     /* var clients = io.sockets.clients(1);
+      data = {
+        groupid : 1,
+        clients : clients
+      }
+      socket.broadcast.to(1).emit('updategroup', data);*/
       
       //socket.join(data)
     })
@@ -120,6 +128,7 @@ io.on('connection', function(socket) {
       io.emit('loggedin-users', rows);
       }
     db.updatesocketid(socket.name,socket.id,cb);
+
    
   });
 

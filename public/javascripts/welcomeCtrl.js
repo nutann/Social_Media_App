@@ -31,7 +31,7 @@
 
                     var data = {
                         message: $scope.t.message,
-                        to: chattingwith.group || chattingwith.socketid,
+                        to: chattingwith.groupid || chattingwith.socketid,
                         from: $scope.currentUser
                     }
 
@@ -43,7 +43,14 @@
                     });
                     $scope.t.message = "";
                     socket.emit("message-sent", data)
-                }
+                };
+
+                socket.on("updategroup",function(data){
+
+                    console.log("updategroup data is " +JSON.stringify(data));
+
+                });
+
 
 
                 socket.on('message-received', function(data) {
@@ -127,6 +134,7 @@
 
                 $scope.createGroup = function(user) {
                     console.log("Entered createGroup ");
+
                     user.addfriendsselected = false;
 
                    
@@ -138,14 +146,21 @@
                     var id = 0;
                     if($scope.people.length > 0){
                         user.chattingfriends = "";
+                        var gname = "";
+                        $scope.people.push(user);
                         $scope.people.forEach(function(person){
-                            user.chattingfriends =  "," + person.firstName;
+                            gname = gname + person.firstName + ",";
 
                         })
-                         $scope.people.push(user);
-
-                        user.group = 1;
-                         console.log("$scope.people : " + JSON.stringify($scope.people));
+                        var newGroup = {
+                            firstName : gname,
+                            groupid : 1,
+                            messages : [],
+                            active : true
+                        
+                    }
+                     $scope.chattingwithusers.push(newGroup);
+                    console.log("$scope.people : " + JSON.stringify($scope.people));
                     group.createGroup(id,user.socketid,$scope.currentUser,$scope.people);
 
                     }
