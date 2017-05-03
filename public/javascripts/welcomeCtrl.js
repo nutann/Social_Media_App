@@ -25,14 +25,16 @@
 
         $scope.sendMessage = function(event, chattingwith) {
 
-
             event.preventDefault();
             console.log("message to be sent is " + $scope.t.message + "user is " + JSON.stringify(chattingwith));
-
+            if (chattingwith.groupid) {
+                var groupChat = true;
+            }
             var data = {
                 message: $scope.t.message,
                 to: chattingwith.groupid || chattingwith.socketid,
-                from: $scope.currentUser
+                from: $scope.currentUser,
+                ifGroup: groupChat
             }
 
             //$scope.messages.push(data);
@@ -48,6 +50,26 @@
         socket.on("updategroup", function(data) {
 
             console.log("updategroup data is " + JSON.stringify(data));
+            var gname = "";
+            data.friends.forEach(function(person) {
+                gname = gname + person.firstName + ",";
+
+            })
+            var newGroup = {
+                firstName: gname,
+                groupid: 1,
+                messages: [],
+                active: true
+
+            }
+            $scope.chattingwithusers.push(newGroup);
+
+            newGroup.messages.push({
+                name: "serverNotification",
+                message: data.message
+            });
+
+            console.log("$scope.people : " + JSON.stringify($scope.people));
 
         });
 
@@ -56,33 +78,48 @@
         socket.on('message-received', function(data) {
             console.log("message-received" + JSON.stringify(data));
             console.log("chatwith users :  **" + JSON.stringify($scope.chattingwithusers));
-            var chattingwith = _.find($scope.chattingwithusers, function(o) {
-                return o.email === data.from;
-            });
-            console.log("chattingwith : " + JSON.stringify(chattingwith));
-
-            if (chattingwith) {
-                chattingwith.messages.push({
-                    name: chattingwith.firstName,
+            if (data.ifGroup) {
+                var newGroup = _.find($scope.chattingwithusers, function(o) {
+                    return o.groupid === data.to;
+                });
+                fromUser = _.find($scope.users, function(o) {
+                    return o.email === data.from;
+                });
+                console.log("fromUser :" + fromUser)
+                newGroup.messages.push({
+                    name: fromUser.firstName,
                     message: data.message
                 });
             } else {
-                chattingwith = _.find($scope.users, function(o) {
+
+                var chattingwith = _.find($scope.chattingwithusers, function(o) {
                     return o.email === data.from;
                 });
-                console.log("not active user " + JSON.stringify(chattingwith));
-                chattingwith.messages = [];
-                chattingwith.messages.push({
-                    name: chattingwith.firstName,
-                    message: data.message
-                });
-                chattingwith.active = false;
-                $scope.chattingwithusers.push(chattingwith);
-                console.log("not active user message count " + chattingwith.messageCount);
+                console.log("chattingwith : " + JSON.stringify(chattingwith));
 
-            }
-            if (!chattingwith.active) {
-                chattingwith.newMessageCount += 1;
+                if (chattingwith) {
+                    chattingwith.messages.push({
+                        name: chattingwith.firstName,
+                        message: data.message
+                    });
+                } else {
+                    chattingwith = _.find($scope.users, function(o) {
+                        return o.email === data.from;
+                    });
+                    console.log("not active user " + JSON.stringify(chattingwith));
+                    chattingwith.messages = [];
+                    chattingwith.messages.push({
+                        name: chattingwith.firstName,
+                        message: data.message
+                    });
+                    chattingwith.active = false;
+                    $scope.chattingwithusers.push(chattingwith);
+                    console.log("not active user message count " + chattingwith.messageCount);
+
+                }
+                if (!chattingwith.active) {
+                    chattingwith.newMessageCount += 1;
+                }
             }
 
         });
