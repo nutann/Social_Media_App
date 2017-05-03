@@ -86,6 +86,7 @@
                     return o.email === data.from;
                 });
                 console.log("fromUser :" + fromUser)
+                newGroup.active = true;
                 newGroup.messages.push({
                     name: fromUser.firstName,
                     message: data.message
