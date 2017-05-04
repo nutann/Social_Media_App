@@ -91,6 +91,15 @@ io.on('connection', function(socket) {
       db.updatesocketid(socket.name,socket.id,cb);
     });
 
+    socket.on("get-users",function(data){
+       function cb(rows){
+      io.emit('loggedin-users', rows);
+      }
+      db.getLoggedinUsers(cb);
+        
+    })
+
+
     socket.on("create-group" ,function(data,cb){
 
       console.log("create the group",+JSON.stringify(data));

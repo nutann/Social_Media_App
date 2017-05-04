@@ -15,6 +15,7 @@
         var maximumChats = 3;
 
         $scope.people = [];
+        socket.emit("get-users");
         socket.on('loggedin-users', function(data) {
             console.log("logged in users " + JSON.stringify(data));
             $scope.users = data.filter(function(item) {

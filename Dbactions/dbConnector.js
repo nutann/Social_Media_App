@@ -65,11 +65,21 @@ function dbConnector() {
 
     }
 
+    function getLoggedinUsers(callback){
+         var cb = function (err, results) {
+            console.log(" get the result with updated data" +JSON.stringify(results) );
+            callback(results);
+        }
+         userDb.all("SELECT * from userinfo WHERE socketid!=0",cb);
+
+    }
+
     return {
         initializeDb : initializeDb,
         updateDb : updateDb,
         closeDb : closeDb,
         fetchDb : fetchDb,
+        getLoggedinUsers : getLoggedinUsers,
         updatesocketid :updatesocketid
     }
 
