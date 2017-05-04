@@ -83,7 +83,7 @@
                 var newGroup = _.find($scope.chattingwithusers, function(o) {
                     return o.groupid === data.to;
                 });
-                fromUser = _.find($scope.users, function(o) {
+                var fromUser = _.find($scope.users, function(o) {
                     return o.email === data.from;
                 });
                 console.log("fromUser :" + fromUser)

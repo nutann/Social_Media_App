@@ -3,73 +3,63 @@
 <div class="row">
     <ul class="horizontal-list">
         <li class= "eachuser" ng-repeat = "user in users">
-        <div ng-click="joinchat(user)">
-            {{user.firstName}}
-            {{user.email}}
-            <div class="newmessage" ng-show = "user.newMessageCount">
-            
-              {{user.newMessageCount}}
+            <div ng-click="joinchat(user)">
+                {{user.firstName}}
+                {{user.email}}
+                <div class="newmessage" ng-show = "user.newMessageCount">
+                    {{user.newMessageCount}}
+                </div>
             </div>
-        </div>
         </li>
     </ul>
-    
 </div>
-
 <ul class="chat">
-  <li class = "eachchat" ng-repeat = "chattingwith in chattingwithusers">
-    <div ng-show = "chattingwith.active" class="popup-box" id={{chattingwith.email}} > 
-      <div class="popup-head">
-         <div class="popup-head-left" ng-if ="!chattingwith.addfriendsselected" id="popup-heading">{{chattingwith.firstName}} {{chattingwith.chattingfriends}}
-        </div>
-        <div class="popup-head-left" ng-if ="chattingwith.addfriendsselected" id="popup-heading">Add Friends
-        </div>
-        <div class="popup-head-right">
-        <a href ng-click=showUsers(chattingwith) class="glyphicon glyphicon-plus"></a>
-        <a href ng-click=closeChat(chattingwith)>&#10005;</a>
-        </div>
-        <div style="clear: both">
-        </div>
-      </div>
-    <div class="messageContainer" ng-show="!chattingwith.addfriendsselected">
-      <div class="popup-messages" >
-        <div class='well chatbox' id='chat_history'>
-          <ul class='list-unstyled'>
-            <li style = "color:black" ng-repeat='m in chattingwith.messages'>
-              <i class='fa fa-comment'></i>
-              &nbsp;
-              <b>{{m.name}} </b>:
-              &nbsp;
-              {{m.message}}
-            </li>
-          </ul>
-        </div>
-        
-      </div>
-
-    <div style="clear: both">
-        
-    </div>
-    <form ng-submit="sendMessage($event,chattingwith)"> <input class="input-sm form-control" ng-model="t.message" type="text" placeholder="Type a message...">
-    <!--input class="btn btn-default"  type="submit" value="Send"--> 
-    </form> 
-  </div>
-
-    <div class="list-group" ng-show="chattingwith.addfriendsselected">
-
-           <div class="list-group-item" ng-repeat = "user in friendslist">
-            {{user.firstName}}
-            {{user.email}}
-            &nbsp;&nbsp;
-            <input type="checkbox" name="checkbox" ng-model= "user.check">
+    <li class = "eachchat" ng-repeat = "chattingwith in chattingwithusers">
+        <div ng-show = "chattingwith.active" class="popup-box" id={{chattingwith.email}} >
+            <div class="popup-head">
+                <div class="popup-head-left" ng-if ="!chattingwith.addfriendsselected" id="popup-heading">{{chattingwith.firstName}} {{chattingwith.chattingfriends}}
+                </div>
+                <div class="popup-head-left" ng-if ="chattingwith.addfriendsselected" id="popup-heading">Add Friends
+                </div>
+                <div class="popup-head-right">
+                    <a href ng-click=showUsers(chattingwith) class="glyphicon glyphicon-plus"></a>
+                    <a href ng-click=closeChat(chattingwith)>&#10005;</a>
+                </div>
+                <div style="clear: both">
+                </div>
             </div>
-              <form id=userForm ng-submit="createGroup(chattingwith)"> 
-    <input class="btn btn-default"  type="submit" value="Create Group"> 
-    </form>
-    </div>
-    
-  </div>
+            <div class="messageContainer" ng-show="!chattingwith.addfriendsselected">
+                <div class="popup-messages" >
+                    <div class='well chatbox' id='chat_history'>
+                        <ul class='list-unstyled'>
+                            <li style = "color:black" ng-repeat='m in chattingwith.messages'>
+                                <i class='fa fa-comment'></i>
+                                &nbsp;
+                                <b>{{m.name}} </b>:
+                                &nbsp;
+                                {{m.message}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="clear: both">
+                </div>
+                <form ng-submit="sendMessage($event,chattingwith)">
+                    <input class="input-sm form-control" ng-model="t.message" type="text" placeholder="Type a message...">
+                    <!--input class="btn btn-default"  type="submit" value="Send"--> 
+                </form>
+            </div>
+            <div class="list-group" ng-show="chattingwith.addfriendsselected">
+                <div class="list-group-item" ng-repeat = "user in friendslist">
+                    {{user.firstName}}
+                    {{user.email}}
+                    &nbsp;&nbsp;
+                    <input type="checkbox" name="checkbox" ng-model= "user.check">
+                </div>
+                <form id=userForm ng-submit="createGroup(chattingwith)"> 
+                    <input class="btn btn-default"  type="submit" value="Create Group"> 
+                </form>
+            </div>
+        </div>
     </li>
 </ul>
-
-
