@@ -3,7 +3,7 @@
  */
 (function () {
 
-    var app = angular.module('SocialMedia',['ui.router','lodash']);
+    var app = angular.module('SocialMedia',['ui.router','lodash','ngCookies']);
 
     app.config(function ($stateProvider,$urlRouterProvider) {
 
