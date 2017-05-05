@@ -10,6 +10,7 @@ var http = require('http');
 var dbConn = require("../Dbactions/dbConnector").DbConnector;
 var db = new dbConn();
 var nodeCleanup = require('node-cleanup');
+var uniqid = require('uniqid');
 
  
 nodeCleanup(function (exitCode, signal) {
@@ -80,6 +81,7 @@ function onListening() {
 }
 
 io.on('connection', function(socket) {
+  var rooms = [];
     console.log('new connection made');
 
     socket.on('join',function(data){
@@ -102,9 +104,10 @@ io.on('connection', function(socket) {
 
     socket.on("create-group" ,function(data,cb){
 
+      var groupid = uniqid.time();
       console.log("create the group",+JSON.stringify(data));
-      cb(true);
-      socket.join(1);
+      cb(groupid);
+      socket.join(groupid);
     })
 
     socket.on("add-users",function(data){
@@ -114,7 +117,7 @@ io.on('connection', function(socket) {
       data.friends.forEach(function(friend){
       var soc = io.sockets.connected[friend.socketid];
       if(soc){
-           soc.join(1);
+           soc.join(data.groupid);
       }
      
 
@@ -124,13 +127,13 @@ io.on('connection', function(socket) {
       var clients = io.sockets.adapter.rooms[1];
       var msg = "You are invited to a group chat"
       updateData = {
-        groupid : 1,
+        groupid : data.groupid,
         clients : clients,
         from:socket.name,
         message:msg,
         friends:data.friends
       }
-      socket.broadcast.to(1).emit('updategroup', updateData);
+      socket.broadcast.to(data.groupid).emit('updategroup', updateData);
       
       //socket.join(data)
     })

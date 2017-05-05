@@ -58,7 +58,7 @@
             })
             var newGroup = {
                 firstName: gname,
-                groupid: 1,
+                groupid: data.groupid,
                 messages: [],
                 active: true
 
@@ -131,6 +131,7 @@
                 user.addfriendsselected = false;
                 return;
             }
+
             console.log("To be closed");
             var chattingwith = _.find($scope.chattingwithusers, function(o) {
                 return o.socketid === user.socketid;
@@ -190,17 +191,22 @@
                 $scope.people.forEach(function(person) {
                     gname = gname + person.firstName + ",";
 
-                })
-                var newGroup = {
+                });
+                var cb = function(gid){
+                     var newGroup = {
+                    groupid : gid,
                     firstName: gname,
-                    groupid: 1,
                     messages: [],
                     active: true
 
-                }
+                    }
                 $scope.chattingwithusers.push(newGroup);
+                }
+                group.createGroup(user.socketid, $scope.currentUser, $scope.people,cb);
+
+               
                 console.log("$scope.people : " + JSON.stringify($scope.people));
-                group.createGroup(id, user.socketid, $scope.currentUser, $scope.people);
+                
 
             }
 

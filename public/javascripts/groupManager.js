@@ -4,18 +4,18 @@
 
     app.factory('group', function($rootScope, socket) {
 
-        function createGroup(id, socketid, owner, people) {
-            this.id = id;
+        function createGroup(socketid, owner, people,cb) {
             this.owner = owner;
             this.people = people;
-            socket.emit("create-group", id, function() {
+            socket.emit("create-group", socketid, function(gid) {
                 console.log("group created");
                 var data = {
-                    groupid: id,
+                    groupid: gid,
                     friends: people
                 }
                 console.log("data to be sent is " + JSON.stringify(data));
                 socket.emit("add-users", data);
+                cb(gid);
             });
 
         };

@@ -40,8 +40,7 @@
                     $cookieStore.remove('username')
                     $cookieStore.remove('password')
                 }
-                $scope.userName = '';
-                $scope.password = '';
+               
 
                 $scope.showerror = false;
                 socket.emit('join', {
@@ -50,6 +49,8 @@
                 $state.go("welcome", {
                     "userName": $scope.userName
                 })
+                 $scope.userName = '';
+                $scope.password = '';
                 console.log("Login success" + response.data);
             }
 
