@@ -136,11 +136,12 @@
                     return o.groupid === user.groupid;
                 });
                 console.log("newGroup :"+ newGroup);
-                var dcUser = newGroup.members.filter(function(item) {
+                var dcUser = _.find(newGroup.members, function(item) {
                     console.log("item.email === $stateParams.userName :"+ item.email +"  "+ $stateParams.userName)
                 return item.email === $stateParams.userName;
             });
                 console.log("dcUser :" + JSON.stringify(dcUser));
+                dcUser.active = false;
                 socket.emit("disconnectServ", {newGroup:newGroup, dcUser:dcUser});
             }
             else{
