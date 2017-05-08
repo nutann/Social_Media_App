@@ -117,6 +117,7 @@ io.on('connection', function(socket) {
       data.friends.forEach(function(friend){
       var soc = io.sockets.connected[friend.socketid];
       if(soc){
+          console.log("SOC :" + soc);
            soc.join(data.groupid);
       }
      
@@ -124,7 +125,7 @@ io.on('connection', function(socket) {
       });
 
       //this is the part to broadcast message to all clients regarding the new user
-      var clients = io.sockets.adapter.rooms[1];
+      var clients = io.sockets.adapter.rooms[data.groupid];
       var msg = "You are invited to a group chat"
       updateData = {
         groupid : data.groupid,
@@ -138,14 +139,24 @@ io.on('connection', function(socket) {
       //socket.join(data)
     })
 
-    socket.on('disconnect', function() {
-      socket.id = 0;
-      function cb(rows){
-      io.emit('loggedin-users', rows);
+    socket.on('disconnectServ', function(data) {
+      console.log("Leaving group" + data.dcUser.firstName);
+      var msg = data.dcUser.firstName + "has left the group chat"
+      updateData = {
+        groupid : data.newGroup.groupid,
+        from:data.dcUser.firstName,
+        message:msg,
+        friends:data.newGroup.friends
       }
-    db.updatesocketid(socket.name,socket.id,cb);
-
-   
+      var soc = io.sockets.connected[data.dcUser.socketid];
+      console.log("SOC :" + soc);
+      if(soc){
+           soc.leave(data.newGroup.groupid);
+           console.log(data.dcUser.firstName +" left the group");
+           socket.broadcast.to(data.newGroup.groupid).emit('updategroup',updateData)
+      }
+      
+      
   });
 
     socket.on('message-sent', function(data){

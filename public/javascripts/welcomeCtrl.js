@@ -60,8 +60,8 @@
                 firstName: gname,
                 groupid: data.groupid,
                 messages: [],
-                active: true
-
+                active: true,
+                members:data.friends
             }
             $scope.chattingwithusers.push(newGroup);
 
@@ -127,6 +127,23 @@
         });
 
         $scope.closeChat = function(user) {
+            console.log("USER"+JSON.stringify(user));
+            if(user.groupid){
+
+                console.log("Disconnecting User" + user);
+                var newGroup = _.find($scope.chattingwithusers, function(o) {
+                    console.log("o.groupid === user.groupid :"+ o.groupid +"   " + user.groupid);
+                    return o.groupid === user.groupid;
+                });
+                console.log("newGroup :"+ newGroup);
+                var dcUser = newGroup.members.filter(function(item) {
+                    console.log("item.email === $stateParams.userName :"+ item.email +"  "+ $stateParams.userName)
+                return item.email === $stateParams.userName;
+            });
+                console.log("dcUser :" + JSON.stringify(dcUser));
+                socket.emit("disconnectServ", {newGroup:newGroup, dcUser:dcUser});
+            }
+            else{
             if (user.addfriendsselected) {
                 user.addfriendsselected = false;
                 return;
@@ -138,6 +155,7 @@
             });
 
             chattingwith.active = false;
+            }
         };
 
         $scope.joinchat = function(user) {
@@ -197,8 +215,8 @@
                     groupid : gid,
                     firstName: gname,
                     messages: [],
-                    active: true
-
+                    active: true,
+                    members: $scope.people
                     }
                 $scope.chattingwithusers.push(newGroup);
                 }
