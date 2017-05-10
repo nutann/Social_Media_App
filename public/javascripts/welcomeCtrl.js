@@ -1,7 +1,7 @@
 /**
  * Created by Sheetal on 4/20/2017.
  */
-(function() {
+ (function() {
 
     var app = angular.module('SocialMedia');
 
@@ -52,27 +52,47 @@
 
             console.log("updategroup data is " + JSON.stringify(data));
             var gname = "";
-            data.friends.forEach(function(person) {
+            if(data.friends){
+               data.friends.forEach(function(person) {
                 gname = gname + person.firstName + ",";
 
             })
-            var newGroup = {
-                firstName: gname,
-                groupid: data.groupid,
-                messages: [],
-                active: true,
-                members:data.friends
-            }
-            $scope.chattingwithusers.push(newGroup);
-
-            newGroup.messages.push({
-                name: "serverNotification",
-                message: data.message
+               var group = _.find( $scope.chattingwithusers, function(o) {
+                return o.groupid === data.groupid;
             });
+               if(group){
+                group.active = true;
+                group.friends = data.friends;
+                group.firstName = gname;
+                group.messages.push({
+                    name: "serverNotification",
+                    message: data.message
+                });
+            }
+            else{
+                var newGroup = {
+                    firstName: gname,
+                    groupid: data.groupid,
+                    messages: [],
+                    active: true,
+                    friends:data.friends
+                }
+                newGroup.messages.push({
+                    name: "serverNotification",
+                    message: data.message
+                });
+                $scope.chattingwithusers.push(newGroup);
 
-            console.log("$scope.people : " + JSON.stringify($scope.people));
+            }
+            
 
-        });
+            
+        }
+        
+
+        console.log("$scope.people : " + JSON.stringify($scope.people));
+
+    });
 
 
 
@@ -131,31 +151,38 @@
             if(user.groupid){
 
                 console.log("Disconnecting User" + user);
+                var index = 0;
                 var newGroup = _.find($scope.chattingwithusers, function(o) {
                     console.log("o.groupid === user.groupid :"+ o.groupid +"   " + user.groupid);
+                    index++;
                     return o.groupid === user.groupid;
                 });
-                console.log("newGroup :"+ newGroup);
-                var dcUser = _.find(newGroup.members, function(item) {
+                console.log("newGroup :"+ JSON.stringify(newGroup) +"index === " +index);
+                var dcUser = _.find(newGroup.friends, function(item) {
                     console.log("item.email === $stateParams.userName :"+ item.email +"  "+ $stateParams.userName)
-                return item.email === $stateParams.userName;
-            });
+                    return item.email === $stateParams.userName;
+                });
+                newGroup.friends = newGroup.friends.filter(function(item) {
+
+                    return item.email !== $stateParams.userName;
+                });
+                $scope.chattingwithusers.splice( index-1, 1 );
                 console.log("dcUser :" + JSON.stringify(dcUser));
-                dcUser.active = false;
+                
                 socket.emit("disconnectServ", {newGroup:newGroup, dcUser:dcUser});
             }
             else{
-            if (user.addfriendsselected) {
-                user.addfriendsselected = false;
-                return;
-            }
+                if (user.addfriendsselected) {
+                    user.addfriendsselected = false;
+                    return;
+                }
 
-            console.log("To be closed");
-            var chattingwith = _.find($scope.chattingwithusers, function(o) {
-                return o.socketid === user.socketid;
-            });
+                console.log("To be closed");
+                var chattingwith = _.find($scope.chattingwithusers, function(o) {
+                    return o.socketid === user.socketid;
+                });
 
-            chattingwith.active = false;
+                chattingwith.active = false;
             }
         };
 
@@ -198,32 +225,32 @@
 
 
             $scope.people = $scope.users.filter(function(item) {
-                    console.log("item.check :" + item.check);
-                    return item.check == true;
-                })
+                console.log("item.check :" + item.check);
+                return item.check == true;
+            })
                 // $scope.people.add(user);
-            var id = 0;
-            if ($scope.people.length > 0) {
-                user.chattingfriends = "";
-                var gname = "";
-                $scope.people.push(user);
-                $scope.people.forEach(function(person) {
-                    gname = gname + person.firstName + ",";
+                var id = 0;
+                if ($scope.people.length > 0) {
+                    user.chattingfriends = "";
+                    var gname = "";
+                    $scope.people.push(user);
+                    $scope.people.forEach(function(person) {
+                        gname = gname + person.firstName + ",";
 
-                });
-                var cb = function(gid){
-                     var newGroup = {
-                    groupid : gid,
-                    firstName: gname,
-                    messages: [],
-                    active: true,
-                    members: $scope.people
+                    });
+                    var cb = function(gid){
+                       var newGroup = {
+                        groupid : gid,
+                        firstName: gname,
+                        messages: [],
+                        active: true,
+                        members: $scope.people
                     }
-                $scope.chattingwithusers.push(newGroup);
+                    $scope.chattingwithusers.push(newGroup);
                 }
                 group.createGroup(user.socketid, $scope.currentUser, $scope.people,cb);
 
-               
+                
                 console.log("$scope.people : " + JSON.stringify($scope.people));
                 
 

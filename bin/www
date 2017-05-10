@@ -142,7 +142,7 @@ io.on('connection', function(socket) {
     socket.on('disconnectServ', function(data) {
       console.log("data :" + JSON.stringify(data));
       console.log("Leaving group" + data.dcUser.firstName);
-      var msg = data.dcUser.firstName + "has left the group chat"
+      var msg = data.dcUser.firstName + " has left the group chat"
       updateData = {
         groupid : data.newGroup.groupid,
         from:data.dcUser.firstName,
@@ -150,7 +150,7 @@ io.on('connection', function(socket) {
         friends:data.newGroup.friends
       }
       var soc = io.sockets.connected[data.dcUser.socketid];
-      console.log("SOC :" + soc);
+      console.log("SOC :" + data.newGroup.groupid);
       if(soc){
            soc.leave(data.newGroup.groupid);
            console.log(data.dcUser.firstName +" left the group");
