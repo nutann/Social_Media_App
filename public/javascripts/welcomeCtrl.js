@@ -57,6 +57,7 @@
                 gname = gname + person.firstName + ",";
 
             })
+               gname = gname.substring(0, gname.length-1);
                var group = _.find( $scope.chattingwithusers, function(o) {
                 return o.groupid === data.groupid;
             });
@@ -86,9 +87,9 @@
             }
             
 
-            
+
         }
-        
+
 
         console.log("$scope.people : " + JSON.stringify($scope.people));
 
@@ -150,6 +151,7 @@
             console.log("USER"+JSON.stringify(user));
             if(user.groupid){
 
+
                 console.log("Disconnecting User" + user);
                 var index = 0;
                 var newGroup = _.find($scope.chattingwithusers, function(o) {
@@ -157,6 +159,10 @@
                     index++;
                     return o.groupid === user.groupid;
                 });
+                if(newGroup.friends.length <=0){
+                      $scope.chattingwithusers.splice( index-1, 1 );
+                      return;
+                }
                 console.log("newGroup :"+ JSON.stringify(newGroup) +"index === " +index);
                 var dcUser = _.find(newGroup.friends, function(item) {
                     console.log("item.email === $stateParams.userName :"+ item.email +"  "+ $stateParams.userName)
@@ -168,7 +174,7 @@
                 });
                 $scope.chattingwithusers.splice( index-1, 1 );
                 console.log("dcUser :" + JSON.stringify(dcUser));
-                
+
                 socket.emit("disconnectServ", {newGroup:newGroup, dcUser:dcUser});
             }
             else{
@@ -194,6 +200,7 @@
             user.active = true;
             if (chattingwith) {
                 //duplicate chat window is already open
+                chattingwith.active = true;
                 console.log("duplicate chat window is already open");
                 return;
             }
@@ -219,18 +226,32 @@
 
 
         $scope.createGroup = function(user) {
-            console.log("Entered createGroup ");
+            console.log("Entered createGroup " +JSON.stringify(user));
 
             user.addfriendsselected = false;
+
 
 
             $scope.people = $scope.users.filter(function(item) {
                 console.log("item.check :" + item.check);
                 return item.check == true;
+            });
+             if(user.groupid){
+                 $scope.people.forEach(function(person) {
+               user.friends.push(person);
+
             })
+                //user.friends.push($scope.people);
+                console.log("group exists add friends" +JSON.stringify(user.friends));
+                group.addPerson(user.friends,user.groupid);
+                
+            }
+            else{
+                console.log("create new grp");
                 // $scope.people.add(user);
                 var id = 0;
                 if ($scope.people.length > 0) {
+                    console.log("create new grp 2");
                     user.chattingfriends = "";
                     var gname = "";
                     $scope.people.push(user);
@@ -238,20 +259,24 @@
                         gname = gname + person.firstName + ",";
 
                     });
+                    gname = gname.substring(0, gname.length-1);
+                    console.log("create new grp 3" +gname);
                     var cb = function(gid){
                        var newGroup = {
                         groupid : gid,
                         firstName: gname,
                         messages: [],
                         active: true,
-                        members: $scope.people
+                        friends: $scope.people
                     }
+                    console.log("create new grp 5");
                     $scope.chattingwithusers.push(newGroup);
+                    console.log("create new grp 4");
+                    
                 }
                 group.createGroup(user.socketid, $scope.currentUser, $scope.people,cb);
-
-                
-                console.log("$scope.people : " + JSON.stringify($scope.people));
+            }
+            
                 
 
             }

@@ -5,6 +5,7 @@
     app.factory('group', function($rootScope, socket) {
 
         function createGroup(socketid, owner, people,cb) {
+            console.log("crete new gtp ========" +JSON.stringify(people))
             this.owner = owner;
             this.people = people;
             socket.emit("create-group", socketid, function(gid) {
@@ -21,9 +22,14 @@
         };
 
 
-        function addPerson(personID) {
+        function addPerson(people,gid) {
+             var data = {
+                    groupid: gid,
+                    friends: people
+                }
+            socket.emit("add-users", data);
 
-            this.people.push(personID);
+            //this.people.push(friends);
 
         };
 
