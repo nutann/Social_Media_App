@@ -51,17 +51,11 @@
         socket.on("updategroup", function(data) {
 
             console.log("updategroup data is " + JSON.stringify(data));
-            var gname = "";
-            if(data.friends){
-               data.friends.forEach(function(person) {
-                gname = gname + person.firstName + ",";
-
-            })
-               gname = gname.substring(0, gname.length-1);
-               var group = _.find( $scope.chattingwithusers, function(o) {
+            var gname = updateGroupName(data.friends);
+            var group = _.find( $scope.chattingwithusers, function(o) {
                 return o.groupid === data.groupid;
             });
-               if(group){
+            if(group){
                 group.active = true;
                 group.friends = data.friends;
                 group.firstName = gname;
@@ -88,12 +82,12 @@
             
 
 
-        }
+            
 
 
-        console.log("$scope.people : " + JSON.stringify($scope.people));
+            console.log("$scope.people : " + JSON.stringify($scope.people));
 
-    });
+        });
 
 
 
@@ -107,10 +101,14 @@
                 var fromUser = _.find($scope.users, function(o) {
                     return o.email === data.from;
                 });
+                if(data.friends){
+                    var gname = updateGroupName(data.friends);
+                }
                 console.log("fromUser :" + fromUser)
+                newGroup.firstName = gname;
                 newGroup.active = true;
                 newGroup.messages.push({
-                    name: fromUser.firstName,
+                    name: (fromUser?fromUser.firstName:"server"),
                     message: data.message
                 });
             } else {
@@ -160,45 +158,45 @@
                     return o.groupid === user.groupid;
                 });
                 if(newGroup.friends.length <=0){
-                      $scope.chattingwithusers.splice( index-1, 1 );
-                      return;
-                }
-                console.log("newGroup :"+ JSON.stringify(newGroup) +"index === " +index);
-                var dcUser = _.find(newGroup.friends, function(item) {
-                    console.log("item.email === $stateParams.userName :"+ item.email +"  "+ $stateParams.userName)
-                    return item.email === $stateParams.userName;
-                });
-                newGroup.friends = newGroup.friends.filter(function(item) {
+                  $scope.chattingwithusers.splice( index-1, 1 );
+                  return;
+              }
+              console.log("newGroup :"+ JSON.stringify(newGroup) +"index === " +index);
+              var dcUser = _.find(newGroup.friends, function(item) {
+                console.log("item.email === $stateParams.userName :"+ item.email +"  "+ $stateParams.userName)
+                return item.email === $stateParams.userName;
+            });
+              newGroup.friends = newGroup.friends.filter(function(item) {
 
-                    return item.email !== $stateParams.userName;
-                });
-                $scope.chattingwithusers.splice( index-1, 1 );
-                console.log("dcUser :" + JSON.stringify(dcUser));
+                return item.email !== $stateParams.userName;
+            });
+              $scope.chattingwithusers.splice( index-1, 1 );
+              console.log("dcUser :" + JSON.stringify(dcUser));
 
-                socket.emit("disconnectServ", {newGroup:newGroup, dcUser:dcUser});
+              socket.emit("disconnectServ", {newGroup:newGroup, dcUser:dcUser});
+          }
+          else{
+            if (user.addfriendsselected) {
+                user.addfriendsselected = false;
+                return;
             }
-            else{
-                if (user.addfriendsselected) {
-                    user.addfriendsselected = false;
-                    return;
-                }
 
-                console.log("To be closed");
-                var chattingwith = _.find($scope.chattingwithusers, function(o) {
-                    return o.socketid === user.socketid;
-                });
-
-                chattingwith.active = false;
-            }
-        };
-
-        $scope.joinchat = function(user) {
+            console.log("To be closed");
             var chattingwith = _.find($scope.chattingwithusers, function(o) {
                 return o.socketid === user.socketid;
             });
-            user.newMessageCount = 0;
-            user.active = true;
-            if (chattingwith) {
+
+            chattingwith.active = false;
+        }
+    };
+
+    $scope.joinchat = function(user) {
+        var chattingwith = _.find($scope.chattingwithusers, function(o) {
+            return o.socketid === user.socketid;
+        });
+        user.newMessageCount = 0;
+        user.active = true;
+        if (chattingwith) {
                 //duplicate chat window is already open
                 chattingwith.active = true;
                 console.log("duplicate chat window is already open");
@@ -224,7 +222,15 @@
             console.log("$scope.friendslist : " + JSON.stringify($scope.friendslist));
         }
 
+        var updateGroupName = function(friends){
+            var gname = "";
+            friends.forEach(function(person) {
+                gname = gname + person.firstName + ",";
 
+            });
+            gname = gname.substring(0, gname.length-1);
+            return gname;
+        }
         $scope.createGroup = function(user) {
             console.log("Entered createGroup " +JSON.stringify(user));
 
@@ -236,14 +242,18 @@
                 console.log("item.check :" + item.check);
                 return item.check == true;
             });
-             if(user.groupid){
-                 $scope.people.forEach(function(person) {
-               user.friends.push(person);
+            
 
-            })
+            if(user.groupid){
+            //      $scope.people.forEach(function(person) {
+            //    user.friends.push(person);
+
+            // })
+            var gname = updateGroupName($scope.people);
+            user.firstName = user.firstName + "," +gname;
                 //user.friends.push($scope.people);
                 console.log("group exists add friends" +JSON.stringify(user.friends));
-                group.addPerson(user.friends,user.groupid);
+                group.addPerson(user.friends,user.groupid,$scope.people);
                 
             }
             else{
@@ -253,16 +263,11 @@
                 if ($scope.people.length > 0) {
                     console.log("create new grp 2");
                     user.chattingfriends = "";
-                    var gname = "";
                     $scope.people.push(user);
-                    $scope.people.forEach(function(person) {
-                        gname = gname + person.firstName + ",";
-
-                    });
-                    gname = gname.substring(0, gname.length-1);
+                    var gname = updateGroupName( $scope.people);
                     console.log("create new grp 3" +gname);
                     var cb = function(gid){
-                       var newGroup = {
+                     var newGroup = {
                         groupid : gid,
                         firstName: gname,
                         messages: [],
@@ -277,14 +282,14 @@
                 group.createGroup(user.socketid, $scope.currentUser, $scope.people,cb);
             }
             
-                
-
-            }
-
+            
 
         }
 
-    });
+
+    }
+
+});
 
 
 

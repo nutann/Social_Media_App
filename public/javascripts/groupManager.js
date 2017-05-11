@@ -22,12 +22,17 @@
         };
 
 
-        function addPerson(people,gid) {
-             var data = {
-                    groupid: gid,
-                    friends: people
+        function addPerson(people,gid,newfriends) {
+            newfriends.forEach(function(frn){
+                var data  = {
+                     groupid: gid,
+                    friends: people,
+                    newfriend : frn
                 }
-            socket.emit("add-users", data);
+                socket.emit("add-new-user", data);
+
+            });
+            
 
             //this.people.push(friends);
 

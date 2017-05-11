@@ -4,55 +4,55 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('Social_Network_App:server');
-var http = require('http');
-var dbConn = require("../Dbactions/dbConnector").DbConnector;
-var db = new dbConn();
-var nodeCleanup = require('node-cleanup');
-var uniqid = require('uniqid');
+ var app = require('../app');
+ var debug = require('debug')('Social_Network_App:server');
+ var http = require('http');
+ var dbConn = require("../Dbactions/dbConnector").DbConnector;
+ var db = new dbConn();
+ var nodeCleanup = require('node-cleanup');
+ var uniqid = require('uniqid');
 
  
-nodeCleanup(function (exitCode, signal) {
-    if (signal) {
-        db.closeDb(function done() {
+ nodeCleanup(function (exitCode, signal) {
+  if (signal) {
+    db.closeDb(function done() {
             // calling process.exit() won't inform parent process of signal 
             process.kill(process.pid, signal);
-        });
+          });
         nodeCleanup.uninstall(); // don't call cleanup handler again 
         return false;
-    }
-});
+      }
+    });
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = parseInt(process.env.PORT, 10) || 3000;
-app.set('port', port);
+ var port = parseInt(process.env.PORT, 10) || 3000;
+ app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
-var io = require('socket.io')(server);
+ var server = http.createServer(app);
+ var io = require('socket.io')(server);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port, function () {
-    console.log("Listening on port ************:" +port);
+ server.listen(port, function () {
+  console.log("Listening on port ************:" +port);
 });
-server.on('error', onError);
-server.on('listening', onListening);
+ server.on('error', onError);
+ server.on('listening', onListening);
 
 /**
  * Event listener for HTTP server "error" event.
  */
 
-function onError(error) {
+ function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -60,15 +60,15 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error('Port ' + port + ' requires elevated privileges');
-      process.exit(1);
-      break;
+    console.error('Port ' + port + ' requires elevated privileges');
+    process.exit(1);
+    break;
     case 'EADDRINUSE':
-      console.error('Port ' + port + ' is already in use');
-      process.exit(1);
-      break;
+    console.error('Port ' + port + ' is already in use');
+    process.exit(1);
+    break;
     default:
-      throw error;
+    throw error;
   }
 }
 
@@ -76,53 +76,52 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
-function onListening() {
+ function onListening() {
   debug('Listening on port ' + server.address().port);
 }
 
 io.on('connection', function(socket) {
   var rooms = [];
-    console.log('new connection made');
+  console.log('new connection made');
 
-    socket.on('join',function(data){
-      socket.name = data.name;
-      console.log("joined **********" +data);
-      function cb(rows){
+  socket.on('join',function(data){
+    socket.name = data.name;
+    console.log("joined **********" +data);
+    function cb(rows){
       io.emit('loggedin-users', rows);
-      }
-      db.updatesocketid(socket.name,socket.id,cb);
-    });
+    }
+    db.updatesocketid(socket.name,socket.id,cb);
+  });
 
-    socket.on("get-users",function(data){
-       function cb(rows){
-      io.emit('loggedin-users', rows);
-      }
-      db.getLoggedinUsers(cb);
-        
-    })
-
-
-    socket.on("create-group" ,function(data,cb){
-
-      var groupid = uniqid.time();
-      console.log("create the group",+JSON.stringify(data));
-      cb(groupid);
-      socket.join(groupid);
-    })
-
-    socket.on("add-users", function(data) {
-
-                console.log("add users" + JSON.stringify(data));
-                console.log("socket name " + socket.name);
-                data.friends.forEach(function(friend) {
-                    var soc = io.sockets.connected[friend.socketid];
-                    if (soc) {
-                        console.log("SOC :" + soc);
-                        soc.join(data.groupid);
-                    }
+  socket.on("get-users",function(data){
+   function cb(rows){
+    io.emit('loggedin-users', rows);
+  }
+  db.getLoggedinUsers(cb);
+  
+})
 
 
-                });
+  socket.on("create-group" ,function(data,cb){
+
+    var groupid = uniqid.time();
+    console.log("create the group",+JSON.stringify(data));
+    cb(groupid);
+    socket.join(groupid);
+  })
+
+  socket.on("add-users",function(data){
+
+    console.log("add users" +JSON.stringify(data));
+    console.log("socket name " +socket.name);
+    data.friends.forEach(function(friend){
+      var soc = io.sockets.connected[friend.socketid];
+      if(soc){
+       soc.join(data.groupid);
+     }
+     
+
+   });
 
       //this is the part to broadcast message to all clients regarding the new user
       var clients = io.sockets.adapter.rooms[data.groupid];
@@ -137,34 +136,53 @@ io.on('connection', function(socket) {
       socket.broadcast.to(data.groupid).emit('updategroup', updateData);
       
       //socket.join(data)
-    })
+    });
+  socket.on('add-new-user',function(data){
 
-    socket.on('disconnectServ', function(data) {
-      console.log("data :" + JSON.stringify(data));
-      console.log("Leaving group" + data.dcUser.firstName);
-      var msg = data.dcUser.firstName + " has left the group chat"
-      updateData = {
-        groupid : data.newGroup.groupid,
-        from:data.dcUser.firstName,
+      //for allhe socket in the grp send message new user is joined
+      var msg = data.newfriend.firstName + " joined the group";
+      data.friends.push(data.newfriend);
+      var ndata = {
+        to : data.groupid,
+        from:socket.name,
         message:msg,
-        friends:data.newGroup.friends
+        friends:data.friends,
+        ifGroup : true
       }
-      var soc = io.sockets.connected[data.dcUser.socketid];
-      console.log("SOC :" + data.newGroup.groupid);
-      if(soc){
-           soc.leave(data.newGroup.groupid);
-           console.log(data.dcUser.firstName +" left the group");
-           socket.broadcast.to(data.newGroup.groupid).emit('updategroup',updateData)
+
+      socket.broadcast.to(data.groupid).emit('message-received',ndata);
+           //join the new friend to the grp
+           var soc = io.sockets.connected[data.newfriend.socketid];
+           if(soc){
+             soc.join(data.groupid);
+           }
+
+      //send the new user notification to update grp
+      var msg = "You are invited to a group chat"
+      updateData = {
+        groupid : data.groupid,
+        from:socket.name,
+        message:msg,
+        friends:data.friends
       }
-      
-      
+      socket.broadcast.to(data.newfriend.socketid).emit('updategroup', updateData);
+    });
+
+  socket.on('disconnect', function() {
+    socket.id = 0;
+    function cb(rows){
+      io.emit('loggedin-users', rows);
+    }
+    db.updatesocketid(socket.name,socket.id,cb);
+
+    
   });
 
-    socket.on('message-sent', function(data){
-      console.log("server side message-sent to " +JSON.stringify(data));
-      socket.broadcast.to(data.to).emit('message-received',data);
+  socket.on('message-sent', function(data){
+    console.log("server side message-sent to " +JSON.stringify(data));
+    socket.broadcast.to(data.to).emit('message-received',data);
 
-    });
+  });
 
 });
 
