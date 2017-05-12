@@ -19,5 +19,11 @@
     "sqlite3": "^3.1.8",
     "uniqid": "^4.1.1",
     "uniquid": "^1.1.4"
+  },
+  "devDependencies": {
+    "jasmine-core": "^2.6.1",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.1.1",
+    "karma-jasmine": "^1.1.0"
   }
 }
