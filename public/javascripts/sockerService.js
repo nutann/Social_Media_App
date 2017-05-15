@@ -14,7 +14,7 @@
 					callback.apply(socket,args);
 				});
 			});
-		};
+		}
 
 		function emit(eventName,data,callback){
 			socket.emit(eventName,data,function(){
@@ -25,12 +25,12 @@
 					}
 				});
 			});
-		};
+		}
 
 		return {
 			on : on,
 			emit : emit
-		}
+		};
 	});
 
 

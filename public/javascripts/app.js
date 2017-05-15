@@ -33,7 +33,6 @@
                 url : '/chat',
                 templateUrl : 'chat.html',
                 controller: function($scope) {
-                    console.log("state is chat")
                 $scope.user = {name: "Nutan"};
                 }
             })

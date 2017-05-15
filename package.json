@@ -21,6 +21,7 @@
     "uniquid": "^1.1.4"
   },
   "devDependencies": {
+    "grunt": "^1.0.1",
     "jasmine-core": "^2.6.1",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.1.1",

@@ -18,14 +18,14 @@
                     "email"     : $scope.email,
                     "password"  :$scope.cpassword
                 }
-            }
+            };
             console.log("submit called");
             var successCallback = function (response) {
-                $state.go("home")
+                $state.go("home");
                 console.log("response success" +response.data);
 
 
-            }
+            };
             var errorCallback = function (err) {
                 if(err.data === "username already exists")
                 {
@@ -37,14 +37,14 @@
 
                 console.log("response error" +JSON.stringify(err));
 
-            }
+            };
 
             //TODO make a ajax query to send data to the server
             $http.post('/updateUserInfo', data).then(successCallback, errorCallback);
 
 
-        }
-    })
+        };
+    });
 
     app.directive('cpwdValidation', function() {
         return {

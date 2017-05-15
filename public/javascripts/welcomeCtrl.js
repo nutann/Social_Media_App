@@ -22,21 +22,22 @@
                 item.newMessageCount = 0;
                 return item.email !== $stateParams.userName;
             });
-        })
+        });
 
         $scope.sendMessage = function(event, chattingwith) {
 
             event.preventDefault();
+            var groupChat= false;
             console.log("message to be sent is " + $scope.t.message + "user is " + JSON.stringify(chattingwith));
             if (chattingwith.groupid) {
-                var groupChat = true;
+                groupChat = true;
             }
             var data = {
                 message: $scope.t.message,
                 to: chattingwith.groupid || chattingwith.socketid,
                 from: $scope.currentUser,
                 ifGroup: groupChat
-            }
+            };
 
             //$scope.messages.push(data);
 
@@ -45,7 +46,7 @@
                 message: $scope.t.message
             });
             $scope.t.message = "";
-            socket.emit("message-sent", data)
+            socket.emit("message-sent", data);
         };
 
         socket.on("updategroup", function(data) {
@@ -71,7 +72,7 @@
                     messages: [],
                     active: true,
                     friends:data.friends
-                }
+                };
                 newGroup.messages.push({
                     name: "serverNotification",
                     message: data.message
@@ -101,10 +102,11 @@
                 var fromUser = _.find($scope.users, function(o) {
                     return o.email === data.from;
                 });
+                var gname = "";
                 if(data.friends){
-                    var gname = updateGroupName(data.friends);
+                    gname = updateGroupName(data.friends);
                 }
-                console.log("fromUser :" + fromUser)
+                console.log("fromUser :" + fromUser);
                 newGroup.firstName = gname;
                 newGroup.active = true;
                 newGroup.messages.push({
@@ -163,7 +165,7 @@
               }
               console.log("newGroup :"+ JSON.stringify(newGroup) +"index === " +index);
               var dcUser = _.find(newGroup.friends, function(item) {
-                console.log("item.email === $stateParams.userName :"+ item.email +"  "+ $stateParams.userName)
+                console.log("item.email === $stateParams.userName :"+ item.email +"  "+ $stateParams.userName);
                 return item.email === $stateParams.userName;
             });
               newGroup.friends = newGroup.friends.filter(function(item) {
@@ -209,7 +211,7 @@
             user.messages = [];
             $scope.chattingwithusers.push(user);
 
-        }
+        };
 
         $scope.showUsers = function(chattingwith) {
             console.log("add friends " + JSON.stringify(chattingwith));
@@ -220,7 +222,7 @@
             });
 
             console.log("$scope.friendslist : " + JSON.stringify($scope.friendslist));
-        }
+        };
 
         var updateGroupName = function(friends){
             var gname = "";
@@ -230,17 +232,17 @@
             });
             gname = gname.substring(0, gname.length-1);
             return gname;
-        }
+        };
         $scope.createGroup = function(user) {
             console.log("Entered createGroup " +JSON.stringify(user));
 
             user.addfriendsselected = false;
-
+            var gname = "";
 
 
             $scope.people = $scope.users.filter(function(item) {
                 console.log("item.check :" + item.check);
-                return item.check == true;
+                return (item.check === true);
             });
             
 
@@ -249,7 +251,7 @@
             //    user.friends.push(person);
 
             // })
-            var gname = updateGroupName($scope.people);
+            gname = updateGroupName($scope.people);
             user.firstName = user.firstName + "," +gname;
                 //user.friends.push($scope.people);
                 console.log("group exists add friends" +JSON.stringify(user.friends));
@@ -264,7 +266,7 @@
                     console.log("create new grp 2");
                     user.chattingfriends = "";
                     $scope.people.push(user);
-                    var gname = updateGroupName( $scope.people);
+                    gname = updateGroupName( $scope.people);
                     console.log("create new grp 3" +gname);
                     var cb = function(gid){
                      var newGroup = {
@@ -273,12 +275,12 @@
                         messages: [],
                         active: true,
                         friends: $scope.people
-                    }
+                    };
                     console.log("create new grp 5");
                     $scope.chattingwithusers.push(newGroup);
                     console.log("create new grp 4");
                     
-                }
+                };
                 group.createGroup(user.socketid, $scope.currentUser, $scope.people,cb);
             }
             
@@ -287,7 +289,7 @@
         }
 
 
-    }
+    };
 
 });
 

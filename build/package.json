@@ -1,0 +1,15 @@
+{
+  "name": "Social-Network",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^1.0.2",
+    "grunt-json-merge": "^0.2.2",
+    "grunt-json-minify": "^0.4.0",
+    "grunt-remove-logging-calls": "git+https://56c04901ff07a8079c8fd2c65a6087655da2c113@github3.cisco.com/spvss-ib/grunt-remove-logging-calls.git",
+    "grunt-stripcomments": "^0.5.0"
+  }
+}

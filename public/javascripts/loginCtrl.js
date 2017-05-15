@@ -14,7 +14,7 @@
 
         $scope.goBack = function() {
             window.history.back();
-        }
+        };
 
         $scope.login = function(event) {
             event.preventDefault();
@@ -25,7 +25,7 @@
                     "userName": $scope.userName,
                     "password": $scope.password
                 }
-            }
+            };
 
             console.log("Login called");
             var successCallback = function(response) {
@@ -37,8 +37,8 @@
                     //$remember('username', $scope.userName);
                     //$remember('password', $scope.password);
                 } else {
-                    $cookieStore.remove('username')
-                    $cookieStore.remove('password')
+                    $cookieStore.remove('username');
+                    $cookieStore.remove('password');
                 }
                
 
@@ -48,25 +48,25 @@
                 });
                 $state.go("welcome", {
                     "userName": $scope.userName
-                })
+                });
                  $scope.userName = '';
                 $scope.password = '';
                 console.log("Login success" + response.data);
-            }
+            }; 
 
             var errorCallback = function(err) {
                 if (err.data === "Username not found") {
                     $scope.showerror = true;
                 }
                 console.log("Login error" + JSON.stringify(err));
-            }
+            };
 
             //TODO make a ajax query to send data to the server
             $http.post('/login', loginData).then(successCallback, errorCallback);
 
 
-        }
-    })
+        };
+    }); 
 
 
 
