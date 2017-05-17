@@ -5,7 +5,7 @@
 
     app = angular.module('SocialMedia');
 
-    app.controller('homeCtrl',function ($scope,$state) {
+    app.controller('homeCtrl',['$scope','$state',function ($scope,$state) {
 
 
         $scope.signup = function (event) {
@@ -14,6 +14,6 @@
             //$state.go('signin');
             
         };
-    });
+    }]);
 
 })();

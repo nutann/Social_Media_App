@@ -2,7 +2,7 @@
 
     app = angular.module('SocialMedia');
 
-    app.factory('group', function($rootScope, socket) {
+    app.factory('group',['$rootScope', 'socket', function($rootScope, socket) {
 
         function createGroup(socketid, owner, people,cb) {
             this.owner = owner;
@@ -47,7 +47,7 @@
             addPerson: addPerson,
             removePerson: removePerson
         };
-    });
+    }]);
 
 
 

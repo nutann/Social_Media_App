@@ -5,7 +5,7 @@
 
     var app = angular.module('SocialMedia');
 
-    app.controller('welcomeCtrl', function($state, $scope, socket, group, $stateParams, _) {
+    app.controller('welcomeCtrl', ['$state', '$scope', 'socket', 'group', '$stateParams', '_',function($state, $scope, socket, group, $stateParams, _) {
         $scope.users = [];
         $scope.chattingwithusers = [];
         $scope.messages = [];
@@ -291,7 +291,7 @@
 
     };
 
-});
+}]);
 
 
 

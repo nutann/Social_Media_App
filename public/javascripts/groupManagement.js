@@ -3,7 +3,7 @@
 
   app = angular.module('SocialMedia');
 
-  app.factory('group',function ($rootScope,socket) {
+  app.factory('group',['$rootScope','socket',function ($rootScope,socket) {
 
   function createGroup(id, socketid, owner,people) {
     this.id = id;
@@ -38,7 +38,7 @@ function removePerson(person) {
       addPerson : addPerson,
       removePerson:removePerson
     };
-  });
+  }]);
 
 
 

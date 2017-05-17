@@ -6,7 +6,7 @@
 
     var app = angular.module('SocialMedia');
 
-    app.controller('loginCtrl', function($scope, $state, $http, socket, $remember,$cookieStore) {
+    app.controller('loginCtrl', ['$scope', '$state', '$http', 'socket','$cookieStore',function($scope, $state, $http, socket,$cookieStore) {
         $scope.showerror = false;
         $scope.remember = false;
         $scope.userName = $cookieStore.get('username');
@@ -66,7 +66,7 @@
 
 
         };
-    }); 
+    }]); 
 
 
 

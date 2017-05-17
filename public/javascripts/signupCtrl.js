@@ -5,7 +5,7 @@
 
     var app = angular.module('SocialMedia');
 
-    app.controller('signupCtrl',function ($scope,$state,$http) {
+    app.controller('signupCtrl',['$scope','$state','$http',function ($scope,$state,$http) {
         $scope.showerror = false;
         $scope.existserror = false;
 
@@ -44,7 +44,7 @@
 
 
         };
-    });
+    }]);
 
     app.directive('cpwdValidation', function() {
         return {

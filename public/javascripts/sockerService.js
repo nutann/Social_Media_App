@@ -2,7 +2,7 @@
 
 	app = angular.module('SocialMedia');
 
-	app.factory('socket',function ($rootScope) {
+	app.factory('socket',['$rootScope',function ($rootScope) {
 
 		var socket = io.connect();
 
@@ -31,7 +31,7 @@
 			on : on,
 			emit : emit
 		};
-	});
+	}]);
 
 
 
