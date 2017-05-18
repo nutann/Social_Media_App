@@ -1,4 +1,4 @@
-var SocketMock = require('socket-io-mock')
+
 describe('SocketService test', function() {
 
 	var sockets;
@@ -6,22 +6,10 @@ describe('SocketService test', function() {
 	var socketMock;
 	beforeEach(function(){
 		angular.mock.module('SocialMedia');
-		console.log("creating socket service");
 
-			var f = function(data){
-
-			}
-		 socketMock = {
-     			 emit: function(value1,valu2,f){
-     			 	console.log("emit s called ++++++++++++");
-
-     			 }
-      			
-    };
 		angular.mock.inject(function($rootScope,_socket_){
 
 			sockets = _socket_;
-			console.log("creating socket service 2" +sockets.socket);
 		});
 
 		 socketMock = sockets.socket();
