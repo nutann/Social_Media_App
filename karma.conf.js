@@ -10,7 +10,9 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine','browserify'],
+
+   
 
 
     // list of files / patterns to load in the browser
@@ -18,11 +20,19 @@ module.exports = function(config) {
         './node_modules/angular/angular.js',
         './node_modules/angular-route/angular-route.js',
         './node_modules/angular-mocks/angular-mocks.js',
+        './node_modules/angular-ui-router/release/angular-ui-router.js',
+        './node_modules/angular-cookies/angular-cookies.js',
+        '.public/javascripts/angular-lodash-module/bower_components/lodash/lodash.js',
+        './public/javascripts/angular-lodash-module/angular-lodash-module.js',
+        './node_modules/socket.io-client/dist/socket.io.js',
 
-        './views/app.js',
-        './public/javascripts/loginCtrl.spec.js'
+
+        './public/javascripts/*.js',
+        './public/javascripts/loginCtrl.spec.js',
+        './public/javascripts/socketService.spec.js',
         
     ],
+
 
 
     // list of files to exclude
@@ -32,8 +42,12 @@ module.exports = function(config) {
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
+  preprocessors: {
+         './public/javascripts/*.js': ['browserify'],
+        // 'test/**/*_test.js': ['webpack']
     },
+
+
 
 
     // test results reporter to use
