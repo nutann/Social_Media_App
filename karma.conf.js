@@ -19,8 +19,8 @@ module.exports = function(config) {
     files: [
         './node_modules/angular/angular.js',
         './node_modules/angular-route/angular-route.js',
-        './node_modules/angular-mocks/angular-mocks.js',
         './node_modules/angular-ui-router/release/angular-ui-router.js',
+        './node_modules/angular-mocks/angular-mocks.js',    
         './node_modules/angular-cookies/angular-cookies.js',
         '.public/javascripts/angular-lodash-module/bower_components/lodash/lodash.js',
         './public/javascripts/angular-lodash-module/angular-lodash-module.js',
@@ -28,6 +28,7 @@ module.exports = function(config) {
 
 
         './public/javascripts/*.js',
+
         './public/javascripts/loginCtrl.spec.js',
         './public/javascripts/socketService.spec.js',
         
