@@ -8,24 +8,40 @@ var controller;
 var $httpBackend;
 var $templateCache;
 var $state;
+var $urlRouterProvider;
+
 
 beforeEach(function(){
 	angular.mock.module('SocialMedia');
 
-	angular.mock.inject(function($injector){
+});
+
+beforeEach(angular.mock.module(function($urlRouterProvider) {
+     // console.log('in', $urlRouterProvider);
+      $urlRouterProvider.deferIntercept();
+    }));
+
+	beforeEach (function()
+	{
+		angular.mock.inject(function($injector){
 		$controller = $injector.get('$controller');
 		$rootScope = $injector.get('$rootScope'); 
 		$scope = $rootScope.$new();
 		$state = $injector.get('$state');
+		//$urlRouterProvider = $injector.get('$urlRouterProvider');
+		//$urlRouterProvider.otherwise(function(){return false;});
 		$httpBackend = $injector.get('$httpBackend');
 		controller = $controller('signupCtrl',{$scope :$scope});
 			$templateCache = $injector.get('$templateCache');
 			$templateCache.put('home.html', '');
+			$state.current.name = 'signup';
 
 
 	})
-
 });
+
+
+
 
 it('test to check signupctrl exists',function(){
 	expect(controller).toBeDefined();
@@ -85,6 +101,7 @@ it('Test to check successful signup',function(){
 				console.log("prevent default");
 			}
 		}
+
    $scope.submit(event);
    $httpBackend.flush();
 
@@ -118,15 +135,14 @@ it('Test to check server error during signup',function(){
 				console.log("prevent default");
 			}
 		}
-	
+
    $scope.submit(event);
 
    $httpBackend.flush();
 
     expect($scope.existserror).toBe(false);
      expect($scope.showerror).toBe(true);
-     //TODO ideally the state should be signup
-     expect($state.current.name).toBe('home');
+     expect($state.current.name).toBe('signup');
 
 });
 

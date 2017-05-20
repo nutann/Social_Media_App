@@ -57,7 +57,9 @@ describe('loginCtrl', function() {
 
 	});
 
-
+	beforeEach(angular.mock.module(function($urlRouterProvider) {
+     $urlRouterProvider.deferIntercept();
+ }));
 	beforeEach(function(){
 		angular.mock.inject(function($injector){
 			$controller = $injector.get('$controller');
@@ -69,6 +71,7 @@ describe('loginCtrl', function() {
 			$templateCache = $injector.get('$templateCache');
 			$templateCache.put('home.html', '');		
 			$templateCache.put('welcome.html', '');	
+			$state.current.name = 'login';
 			spyOn(socket, 'emit');		  
 		});
 
@@ -77,9 +80,9 @@ describe('loginCtrl', function() {
 	
 
 	it('login controller exists', function() {
-	
-    expect(controller).toBeDefined();
-});
+
+		expect(controller).toBeDefined();
+	});
 
 	it('Test login function with incorrect username and password', function() {
 
@@ -107,15 +110,9 @@ describe('loginCtrl', function() {
 		$scope.login(event);
 		$httpBackend.flush();
 
-     //	$state.expectTransitionTo('home');
-     //TODO state should be login ,but somehow its showing home but works correctly in production
-     expect($state.current.name).toBe('home');
-     expect($scope.showerror).toBe(true);
-
-
-
-
- });
+		expect($state.current.name).toBe('login');
+		expect($scope.showerror).toBe(true);
+	});
 
 
 
@@ -140,14 +137,14 @@ describe('loginCtrl', function() {
 				console.log("prevent default");
 			}
 		}
-     	 $scope.login(event);
-     	 $httpBackend.flush();
-     	 expect($scope.showerror).toBe(false);
+		$scope.login(event);
+		$httpBackend.flush();
+		expect($scope.showerror).toBe(false);
 
-     	 expect($state.current.name).toBe('welcome');
+		expect($state.current.name).toBe('welcome');
 
 
-     	});
+	});
 
 	it('Test login function to store username and password in  cookie store', function() {
 
@@ -173,20 +170,20 @@ describe('loginCtrl', function() {
 			}
 		}
 
-     	 $scope.login(event);
-     	 $httpBackend.flush();
-     	 expect(socket.emit).toHaveBeenCalledWith('join',{
-     	 	name : username1
-     	 });
-     	 expect($scope.showerror).toBe(false);
+		$scope.login(event);
+		$httpBackend.flush();
+		expect(socket.emit).toHaveBeenCalledWith('join',{
+			name : username1
+		});
+		expect($scope.showerror).toBe(false);
 
-     	 expect($state.current.name).toBe('welcome');
-     	 expect(cookieStoreMock.get('username')).toBe('example@gmail.com');
-     	 expect(cookieStoreMock.get('password')).toBe('1234');
-     	 
+		expect($state.current.name).toBe('welcome');
+		expect(cookieStoreMock.get('username')).toBe('example@gmail.com');
+		expect(cookieStoreMock.get('password')).toBe('1234');
 
 
-     	});
+
+	});
 	it('Test login function to not store username and password in  cookie store', function() {
 
 		controller = $controller('loginCtrl', { $scope: $scope});
