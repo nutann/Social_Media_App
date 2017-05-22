@@ -11,8 +11,7 @@
         $stateProvider
             .state('home',{
                 url : '/home',
-                templateUrl:'home.html',
-                controller : 'homeCtrl'
+                templateUrl:'home.html'
             })
             .state('login',{
                 url : '/login',
@@ -36,11 +35,6 @@
                 $scope.user = {name: "Nutan"};
                 }
             })
-            .state('main',{
-                url : '/main',
-                templateUrl : 'main.html',
-                controller : 'mainCtrl'
-            });
     });
 
 })();
