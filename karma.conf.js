@@ -23,9 +23,9 @@ module.exports = function(config) {
         './node_modules/angular-mocks/angular-mocks.js',    
         './node_modules/angular-cookies/angular-cookies.js',
         '.public/javascripts/angular-lodash-module/bower_components/lodash/lodash.js',
-        './public/javascripts/angular-lodash-module/angular-lodash-module.js',
         './node_modules/socket.io-client/dist/socket.io.js',
-
+        './public/javascripts/angular-lodash-module/bower_components/lodash/dist/lodash.js',
+        './public/javascripts/angular-lodash-module/*.js',
 
         './public/javascripts/*.js',
 

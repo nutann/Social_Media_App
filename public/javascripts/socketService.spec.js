@@ -2,7 +2,6 @@
 describe('SocketService test', function() {
 
 	var sockets;
-	var scope;
 	var socketMock;
 	beforeEach(function(){
 		angular.mock.module('SocialMedia');
